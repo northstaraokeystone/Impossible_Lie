@@ -38,8 +38,8 @@ export default function CloseScreen({ merkleRoot }) {
 
       {/* Tagline - Updated copy per spec */}
       <h1 className="text-3xl md:text-4xl text-center mb-16">
-        <span className="text-gray-300">Don't just detect lies, </span>
-        <span className="text-red-500">make lying impossible</span>
+        <span className="text-gray-300">Don't just detect tampering, </span>
+        <span className="text-red-500">make tampering evident</span>
       </h1>
 
       {/* Simple restart hint - NO BUTTONS, NO QR, NO CTA */}

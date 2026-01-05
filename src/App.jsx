@@ -6,8 +6,10 @@
 import React, { useEffect, useCallback, useState } from 'react'
 import { useDemo, STATES } from './hooks/useDemo'
 import MerkleStructure from './components/MerkleStructure'
-import EntropyGauge from './components/EntropyGauge'
-import CompressionGauge from './components/CompressionGauge'
+import ChainHealthIndicator from './components/ChainHealthIndicator'
+import AuditReadinessIndicator from './components/AuditReadinessIndicator'
+import EventsProcessedCounter from './components/EventsProcessedCounter'
+import ComplianceFooter from './components/ComplianceFooter'
 import EventLog from './components/EventLog'
 import ModifyPanel from './components/ModifyPanel'
 import RejectionDisplay from './components/RejectionDisplay'
@@ -17,6 +19,7 @@ import CloseScreen from './components/CloseScreen'
 export default function App() {
   const demo = useDemo()
   const [rejectCanContinue, setRejectCanContinue] = useState(false)
+  const [attackerRole, setAttackerRole] = useState('external')
 
   // Initialize on mount
   useEffect(() => {
@@ -40,6 +43,7 @@ export default function App() {
     } else if (e.key === 'r' || e.key === 'R') {
       e.preventDefault()
       demo.restart()
+      setAttackerRole('external')
     }
   }, [demo.state, rejectCanContinue])
 
@@ -47,6 +51,9 @@ export default function App() {
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
   }, [handleKeyDown])
+
+  // Determine if chain is compromised (only in REJECT state)
+  const isCompromised = demo.state === STATES.REJECT
 
   // Render based on current state
   const renderContent = () => {
@@ -59,8 +66,7 @@ export default function App() {
           <BuildScreen
             events={demo.events}
             tree={demo.tree}
-            entropy={demo.entropy}
-            compression={demo.compression}
+            isCompromised={false}
           />
         )
 
@@ -69,8 +75,7 @@ export default function App() {
           <PromptScreen
             events={demo.events}
             tree={demo.tree}
-            entropy={demo.entropy}
-            compression={demo.compression}
+            isCompromised={false}
             onContinue={demo.nextState}
           />
         )
@@ -80,12 +85,13 @@ export default function App() {
           <ModifyScreen
             events={demo.events}
             tree={demo.tree}
-            entropy={demo.entropy}
-            compression={demo.compression}
+            isCompromised={false}
             selectedEvent={demo.selectedEvent}
             tamperedIndex={demo.tamperedIndex}
             onSelectEvent={demo.selectEvent}
             onSubmit={demo.attemptModify}
+            attackerRole={attackerRole}
+            onRoleChange={setAttackerRole}
           />
         )
 
@@ -101,12 +107,13 @@ export default function App() {
             onContinue={() => {
               if (rejectCanContinue) demo.nextState()
             }}
+            attackerRole={attackerRole}
           />
         )
 
       case STATES.COMPARISON:
         return (
-          <div className="screen-container bg-[#0a0a0a]" onClick={demo.nextState}>
+          <div className="screen-container bg-[#0a0a0a] pb-20" onClick={demo.nextState}>
             <div className="content-wrapper">
               <ComparisonView events={demo.events} />
             </div>
@@ -121,9 +128,13 @@ export default function App() {
     }
   }
 
+  // Show footer on most screens (not intro or close)
+  const showFooter = demo.state !== STATES.INTRO && demo.state !== STATES.CLOSE
+
   return (
     <div className="min-h-screen bg-background text-white">
       {renderContent()}
+      {showFooter && <ComplianceFooter />}
     </div>
   )
 }
@@ -147,12 +158,12 @@ function IntroScreen({ onContinue }) {
         </div>
 
         <h1 className="text-7xl md:text-8xl font-bold mb-10">
-          The Impossible Lie
+          The Unbreakable Chain
         </h1>
 
         <p className="text-xl md:text-2xl text-gray-400 mb-12 leading-loose max-w-3xl mx-auto">
           A third-party integration just exfiltrated 4,942 customer records.
-          Watch how receipts-native logging makes tampering mathematically impossible.
+          Watch how cryptographically verifiable logging makes tampering evident.
         </p>
 
         <div className="text-gray-500 text-lg">
@@ -164,13 +175,16 @@ function IntroScreen({ onContinue }) {
 }
 
 // Build Screen - Events firing, structure growing
-function BuildScreen({ events, tree, entropy, compression }) {
+function BuildScreen({ events, tree, isCompromised }) {
   return (
-    <div className="screen-container bg-[#0a0a0a]">
+    <div className="screen-container bg-[#0a0a0a] pb-20">
       <div className="content-wrapper">
-        <h2 className="text-3xl font-bold mb-8 text-center text-gray-300">
-          Recording Security Events
-        </h2>
+        <div className="flex items-center justify-between mb-8">
+          <h2 className="text-3xl font-bold text-gray-300">
+            Recording Security Events
+          </h2>
+          <EventsProcessedCounter />
+        </div>
 
         {/* Main content row - Event log beside Merkle tree */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
@@ -185,10 +199,10 @@ function BuildScreen({ events, tree, entropy, compression }) {
           </div>
         </div>
 
-        {/* Gauges row - below log and tree */}
+        {/* Business metrics row - below log and tree */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-          <EntropyGauge value={entropy} />
-          <CompressionGauge value={compression} />
+          <ChainHealthIndicator isCompromised={isCompromised} />
+          <AuditReadinessIndicator isCompromised={isCompromised} />
         </div>
 
         <div className="text-center text-gray-500 text-lg">
@@ -200,10 +214,17 @@ function BuildScreen({ events, tree, entropy, compression }) {
 }
 
 // Prompt Screen - Challenge the user
-function PromptScreen({ events, tree, entropy, compression, onContinue }) {
+function PromptScreen({ events, tree, isCompromised, onContinue }) {
   return (
-    <div className="screen-container bg-[#0a0a0a]">
+    <div className="screen-container bg-[#0a0a0a] pb-20">
       <div className="content-wrapper">
+        <div className="flex items-center justify-between mb-8">
+          <h2 className="text-3xl font-bold text-gray-300">
+            Chain Complete
+          </h2>
+          <EventsProcessedCounter />
+        </div>
+
         {/* Main content row - Event log beside Merkle tree */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
           {/* Left column - Event log */}
@@ -217,10 +238,10 @@ function PromptScreen({ events, tree, entropy, compression, onContinue }) {
           </div>
         </div>
 
-        {/* Gauges row - below log and tree */}
+        {/* Business metrics row - below log and tree */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-          <EntropyGauge value={entropy} />
-          <CompressionGauge value={compression} />
+          <ChainHealthIndicator isCompromised={isCompromised} />
+          <AuditReadinessIndicator isCompromised={isCompromised} />
         </div>
 
         {/* Challenge panel - centered, full width, reduced visual weight */}
@@ -249,12 +270,13 @@ function PromptScreen({ events, tree, entropy, compression, onContinue }) {
 function ModifyScreen({
   events,
   tree,
-  entropy,
-  compression,
+  isCompromised,
   selectedEvent,
   tamperedIndex,
   onSelectEvent,
-  onSubmit
+  onSubmit,
+  attackerRole,
+  onRoleChange
 }) {
   // Auto-select the DATA_EXPORT event if nothing selected
   useEffect(() => {
@@ -267,11 +289,14 @@ function ModifyScreen({
   }, [events, selectedEvent, onSelectEvent])
 
   return (
-    <div className="screen-container bg-[#0a0a0a]">
+    <div className="screen-container bg-[#0a0a0a] pb-20">
       <div className="content-wrapper">
-        <h2 className="text-3xl font-bold mb-8 text-center text-gray-300">
-          Select an event to modify
-        </h2>
+        <div className="flex items-center justify-between mb-8">
+          <h2 className="text-3xl font-bold text-gray-300">
+            Select an event to modify
+          </h2>
+          <EventsProcessedCounter />
+        </div>
 
         {/* Main content row - Event log beside Merkle tree */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
@@ -290,22 +315,27 @@ function ModifyScreen({
           </div>
         </div>
 
-        {/* Gauges row - below log and tree */}
+        {/* Business metrics row - below log and tree */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-          <EntropyGauge value={entropy} />
-          <CompressionGauge value={compression} />
+          <ChainHealthIndicator isCompromised={isCompromised} />
+          <AuditReadinessIndicator isCompromised={isCompromised} />
         </div>
 
         {/* Modify panel - centered, full width */}
-        <ModifyPanel event={selectedEvent} onSubmit={onSubmit} />
+        <ModifyPanel
+          event={selectedEvent}
+          onSubmit={onSubmit}
+          attackerRole={attackerRole}
+          onRoleChange={onRoleChange}
+        />
       </div>
     </div>
   )
 }
 
-// Reject Screen - Show rejection with math and 30-second pause
+// Reject Screen - Show rejection with compliance report and 30-second pause
 // LAYOUT MATCHES Events/Modify screens for visual consistency
-function RejectScreen({ events, tree, tamperedIndex, tamperResult, canContinue, onCanContinue, onContinue }) {
+function RejectScreen({ events, tree, tamperedIndex, tamperResult, canContinue, onCanContinue, onContinue, attackerRole }) {
   const [countdown, setCountdown] = useState(30)
   const [shakeClass, setShakeClass] = useState('shake-once')
 
@@ -335,15 +365,18 @@ function RejectScreen({ events, tree, tamperedIndex, tamperResult, canContinue, 
 
   return (
     <div
-      className={`screen-container bg-[#0a0a0a] ${shakeClass} ${canContinue ? 'cursor-pointer' : 'cursor-not-allowed'}`}
+      className={`screen-container bg-[#0a0a0a] pb-20 ${shakeClass} ${canContinue ? 'cursor-pointer' : 'cursor-not-allowed'}`}
       onClick={onContinue}
     >
       <div className="content-wrapper">
-        {/* Giant REJECTED header */}
-        <div className="text-center mb-8">
-          <h1 className="text-6xl md:text-8xl font-bold text-red-500 animate-pulse">
-            ⊘ REJECTED ⊘
-          </h1>
+        {/* Header with status indicators */}
+        <div className="flex items-center justify-between mb-8">
+          <div className="text-center">
+            <h1 className="text-5xl md:text-6xl font-bold text-red-500 animate-pulse">
+              INTEGRITY VIOLATION
+            </h1>
+          </div>
+          <EventsProcessedCounter />
         </div>
 
         {/* Main content row - Event log beside Merkle tree (SAME as other screens) */}
@@ -359,9 +392,20 @@ function RejectScreen({ events, tree, tamperedIndex, tamperResult, canContinue, 
           </div>
         </div>
 
-        {/* Rejection details panel - full width below */}
-        <div className="rejection-panel p-6">
-          <RejectionDisplay tamperResult={tamperResult} showContinue={false} />
+        {/* Business metrics row - showing compromised state */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+          <ChainHealthIndicator isCompromised={true} />
+          <AuditReadinessIndicator isCompromised={true} />
+        </div>
+
+        {/* Rejection details panel - compliance report style */}
+        <div className="rejection-panel">
+          <RejectionDisplay
+            tamperResult={tamperResult}
+            showContinue={false}
+            tamperedIndex={tamperedIndex}
+            attackerRole={attackerRole}
+          />
         </div>
 
         {/* Countdown or continue message */}

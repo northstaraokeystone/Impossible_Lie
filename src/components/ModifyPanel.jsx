@@ -1,11 +1,12 @@
 /**
  * ModifyPanel - Interface for investor to attempt modification
+ * Now includes attacker role selection (External vs Insider)
  */
 
 import React, { useState } from 'react'
 import { formatEvent, getEventTypeColor } from '../lib/events'
 
-export default function ModifyPanel({ event, onSubmit }) {
+export default function ModifyPanel({ event, onSubmit, attackerRole, onRoleChange }) {
   const [modifiedValue, setModifiedValue] = useState('')
 
   if (!event) {
@@ -41,7 +42,62 @@ export default function ModifyPanel({ event, onSubmit }) {
 
   return (
     <div className="bg-gray-900/50 rounded-lg p-6 border border-gray-700">
-      <h3 className="text-xl font-bold mb-5 text-white">Modify Record</h3>
+      <h3 className="text-xl font-bold mb-5 text-white">Simulate Attack</h3>
+
+      {/* Attacker Role Selector */}
+      <div className="mb-6">
+        <label className="block text-sm text-gray-400 mb-3 uppercase tracking-wider">
+          Select Attacker Profile
+        </label>
+        <div className="grid grid-cols-2 gap-3">
+          <button
+            type="button"
+            onClick={() => onRoleChange('external')}
+            className={`p-4 rounded-lg border transition-all duration-200 text-left ${
+              attackerRole === 'external'
+                ? 'border-amber-500 bg-amber-500/10'
+                : 'border-gray-700 bg-gray-800/50 hover:border-gray-600'
+            }`}
+          >
+            <div className="flex items-center gap-2 mb-2">
+              <div className={`w-2 h-2 rounded-full ${attackerRole === 'external' ? 'bg-amber-500' : 'bg-gray-600'}`} />
+              <span className={`font-bold ${attackerRole === 'external' ? 'text-amber-400' : 'text-gray-400'}`}>
+                External Attacker
+              </span>
+            </div>
+            <p className="text-xs text-gray-500">
+              Standard perimeter defense scenario
+            </p>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => onRoleChange('insider')}
+            className={`p-4 rounded-lg border transition-all duration-200 text-left ${
+              attackerRole === 'insider'
+                ? 'border-red-500 bg-red-500/10'
+                : 'border-gray-700 bg-gray-800/50 hover:border-gray-600'
+            }`}
+          >
+            <div className="flex items-center gap-2 mb-2">
+              <div className={`w-2 h-2 rounded-full ${attackerRole === 'insider' ? 'bg-red-500' : 'bg-gray-600'}`} />
+              <span className={`font-bold ${attackerRole === 'insider' ? 'text-red-400' : 'text-gray-400'}`}>
+                Insider with Admin Access
+              </span>
+            </div>
+            <p className="text-xs text-gray-500">
+              Direct database access - the key differentiator
+            </p>
+          </button>
+        </div>
+        {attackerRole === 'insider' && (
+          <div className="mt-3 p-3 bg-red-900/20 border border-red-800 rounded-lg">
+            <p className="text-sm text-red-300">
+              Even with full database access, cryptographic signatures cannot be forged.
+            </p>
+          </div>
+        )}
+      </div>
 
       {/* Original event display */}
       <div className="mb-6 p-4 bg-gray-800/50 rounded-lg border border-red-900/50">
@@ -96,7 +152,7 @@ export default function ModifyPanel({ event, onSubmit }) {
           className="w-full bg-white/10 border border-red-500 text-red-400 font-bold py-3 px-4
                      rounded-lg transition-colors duration-[600ms] text-lg hover:bg-red-500/20"
         >
-          Attempt Modification
+          Attempt Modification {attackerRole === 'insider' ? '(as Admin)' : ''}
         </button>
       </form>
     </div>
