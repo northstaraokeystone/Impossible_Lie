@@ -1,139 +1,197 @@
 /**
- * ComparisonView - Side-by-side standard logging vs receipts-native
- * Wider columns, cleaner design
+ * ComparisonView - The Silent Failure vs Active Defense
+ * Split-screen comparison showing standard logging accepts lies while we preserve truth
  */
 
-import React, { useState } from 'react'
-import { formatEvent, getEventTypeColor } from '../lib/events'
+import React, { useState, useEffect } from 'react'
+import EventsProcessedCounter from './EventsProcessedCounter'
 
 export default function ComparisonView({ events = [] }) {
-  const [standardModified, setStandardModified] = useState(false)
-  const [modifiedEvent, setModifiedEvent] = useState(null)
+  // Animation states
+  const [leftPhase, setLeftPhase] = useState(0) // 0: show original, 1: show attempt, 2: show modified, 3: show success
+  const [rightPhase, setRightPhase] = useState(0) // 0: waiting, 1: show attempt, 2: flash red, 3: show violation
+  const [showTagline, setShowTagline] = useState(false)
+  const [silenceHold, setSilenceHold] = useState(false)
 
-  // Find the DATA_EXPORT event (index 4, 0-indexed)
-  const exportEventIndex = events.findIndex(e => e.type === 'DATA_EXPORT')
-  const exportEvent = events[exportEventIndex]
+  // Find the DATA_EXPORT event
+  const exportEvent = events.find(e => e.type === 'DATA_EXPORT')
+  const originalValue = exportEvent?.details?.records || 4942
+  const tamperedValue = 0
 
-  const handleStandardModify = () => {
-    if (exportEvent) {
-      const modified = { ...exportEvent, details: { ...exportEvent.details, records: 0, anomaly: false } }
-      setModifiedEvent(modified)
-      setStandardModified(true)
-    }
-  }
+  // Animation sequence
+  useEffect(() => {
+    const timers = []
+
+    // Left panel sequence (standard logging)
+    // Phase 1: Show modification attempt (2s)
+    timers.push(setTimeout(() => setLeftPhase(1), 2000))
+    // Phase 2: Show value changing (2s later)
+    timers.push(setTimeout(() => setLeftPhase(2), 4000))
+    // Phase 3: Show UPDATE SUCCESSFUL (2s later)
+    timers.push(setTimeout(() => {
+      setLeftPhase(3)
+      setSilenceHold(true)
+    }, 6000))
+
+    // THE SILENCE - hold for 3 seconds before right panel responds
+    timers.push(setTimeout(() => setSilenceHold(false), 9000))
+
+    // Right panel sequence (receipts-native)
+    // Phase 1: Show attempt starting (after silence)
+    timers.push(setTimeout(() => setRightPhase(1), 9500))
+    // Phase 2: Flash red (instant detection)
+    timers.push(setTimeout(() => setRightPhase(2), 10500))
+    // Phase 3: Show INTEGRITY VIOLATION
+    timers.push(setTimeout(() => setRightPhase(3), 11500))
+
+    // Show tagline after both panels complete
+    timers.push(setTimeout(() => setShowTagline(true), 14000))
+
+    return () => timers.forEach(clearTimeout)
+  }, [])
 
   return (
-    <div className="space-y-10">
-      <h2 className="text-3xl font-bold text-center text-gray-300">
-        Standard Logging vs Receipts-Native
-      </h2>
+    <div className="space-y-8 relative">
+      {/* Events counter - always visible, always running */}
+      <div className="absolute top-0 right-0">
+        <EventsProcessedCounter />
+      </div>
 
-      <div className="grid grid-cols-2 gap-12">
-        {/* Standard Logging Column */}
-        <div className="bg-gray-900 rounded-lg p-8 border-l-4 border-l-red-500 border border-gray-700">
-          <div className="flex items-center justify-between mb-6">
-            <h3 className="text-xl font-bold text-gray-300">Standard Logging</h3>
-            <span className="text-base bg-red-600 text-white px-4 py-2 rounded font-medium">
-              MUTABLE
-            </span>
+      {/* 50/50 Split Screen */}
+      <div className="grid grid-cols-2 gap-8 pt-12">
+        {/* LEFT PANEL - The Silent Failure */}
+        <div className={`bg-gray-900 rounded-lg p-8 border border-gray-700 transition-all duration-500 ${
+          leftPhase >= 3 ? 'border-green-500/50' : ''
+        }`}>
+          <div className="mb-6">
+            <h3 className="text-xl font-bold text-gray-300 mb-1">STANDARD LOGGING</h3>
+            <p className="text-sm text-gray-500 font-mono">(Splunk / Datadog / Traditional)</p>
           </div>
 
-          <div className="space-y-3 font-mono text-base max-h-64 overflow-y-auto mb-6">
-            {events.map((event, index) => {
-              const isModified = standardModified && index === exportEventIndex
-              const displayEvent = isModified ? modifiedEvent : event
-
-              return (
-                <div
-                  key={event.id}
-                  className={`p-3 rounded ${isModified ? 'bg-green-900/30 border border-green-500' : 'bg-gray-800/50'}`}
-                >
-                  <div className="flex items-center gap-2">
-                    <span className="text-gray-500">{displayEvent.timestamp}</span>
-                    <span style={{ color: getEventTypeColor(displayEvent.type) }}>
-                      {displayEvent.type}
-                    </span>
-                  </div>
-                  <div className="text-gray-400 text-sm mt-1">
-                    {Object.entries(displayEvent.details).map(([k, v]) => (
-                      <span key={k} className="mr-3">
-                        {k}: {Array.isArray(v) ? `[${v.join(', ')}]` : String(v)}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              )
-            })}
+          {/* Record display */}
+          <div className="bg-gray-800/50 rounded-lg p-6 mb-6 font-mono">
+            <div className="text-gray-400 text-sm mb-2">DATA_EXPORT</div>
+            <div className="flex items-center gap-2">
+              <span className="text-gray-500">records:</span>
+              <span className={`text-2xl font-bold transition-all duration-500 ${
+                leftPhase >= 2 ? 'text-green-400' : 'text-white'
+              }`}>
+                {leftPhase >= 2 ? tamperedValue : originalValue}
+              </span>
+              {leftPhase === 1 && (
+                <span className="text-amber-400 text-sm animate-pulse ml-2">← modifying...</span>
+              )}
+            </div>
           </div>
 
-          {!standardModified ? (
-            <button
-              onClick={handleStandardModify}
-              className="w-full bg-transparent border border-red-500 text-red-400 font-bold py-3 px-4
-                         rounded-lg transition-colors duration-[600ms] text-base hover:bg-red-500/20"
-            >
-              Modify Export Record
-            </button>
-          ) : (
-            <div className="text-center space-y-2">
-              <div className="text-green-400 font-bold text-lg">✓ Modified Successfully</div>
-              <div className="text-gray-400 text-base">
-                Records changed from 4942 to 0. No trace of tampering.
+          {/* Status area */}
+          <div className={`p-4 rounded-lg text-center transition-all duration-500 ${
+            leftPhase >= 3
+              ? 'bg-green-900/30 border border-green-500'
+              : 'bg-gray-800/30 border border-gray-700'
+          }`}>
+            {leftPhase < 3 ? (
+              <span className="text-gray-500">Awaiting operation...</span>
+            ) : (
+              <div>
+                <div className="text-green-400 font-bold text-xl mb-1">UPDATE SUCCESSFUL</div>
+                <div className="text-gray-500 text-sm">No alert. No warning. Nothing.</div>
               </div>
+            )}
+          </div>
+
+          {/* The horror label */}
+          {leftPhase >= 3 && (
+            <div className="mt-4 text-center">
+              <span className="text-red-400/60 text-xs font-mono tracking-wider">
+                THE LIE BECAME THE TRUTH
+              </span>
             </div>
           )}
         </div>
 
-        {/* Receipts-Native Column */}
-        <div className="bg-gray-900 rounded-lg p-8 border-l-4 border-l-green-500 border border-gray-700">
-          <div className="flex items-center justify-between mb-6">
-            <h3 className="text-xl font-bold text-green-400">Receipts-Native</h3>
-            <span className="text-base bg-green-600 text-white px-4 py-2 rounded font-medium">
-              IMMUTABLE
-            </span>
+        {/* RIGHT PANEL - Active Defense */}
+        <div className={`bg-gray-900 rounded-lg p-8 border transition-all duration-300 ${
+          rightPhase >= 2
+            ? 'border-red-500 shadow-[0_0_30px_rgba(239,68,68,0.3)]'
+            : 'border-gray-700'
+        } ${rightPhase === 2 ? 'animate-pulse' : ''}`}>
+          <div className="mb-6">
+            <h3 className="text-xl font-bold text-green-400 mb-1">RECEIPTS-NATIVE</h3>
+            <p className="text-sm text-gray-500 font-mono">(Unbreakable Chain)</p>
           </div>
 
-          <div className="space-y-3 font-mono text-base max-h-64 overflow-y-auto mb-6">
-            {events.map((event, index) => (
-              <div
-                key={event.id}
-                className={`p-3 rounded bg-gray-800/50 ${
-                  index === exportEventIndex ? 'border border-gray-600' : ''
-                }`}
-              >
-                <div className="flex items-center gap-2">
-                  <span className="text-gray-500">{event.timestamp}</span>
-                  <span style={{ color: getEventTypeColor(event.type) }}>
-                    {event.type}
-                  </span>
-                </div>
-                <div className="text-gray-400 text-sm mt-1">
-                  {Object.entries(event.details).map(([k, v]) => (
-                    <span key={k} className="mr-3">
-                      {k}: {Array.isArray(v) ? `[${v.join(', ')}]` : String(v)}
-                    </span>
-                  ))}
-                </div>
+          {/* Record display */}
+          <div className={`bg-gray-800/50 rounded-lg p-6 mb-6 font-mono transition-all duration-300 ${
+            rightPhase >= 2 ? 'border border-red-500/50' : ''
+          }`}>
+            <div className="text-gray-400 text-sm mb-2">DATA_EXPORT</div>
+            <div className="flex items-center gap-2">
+              <span className="text-gray-500">records:</span>
+              <span className="text-2xl font-bold text-white">
+                {originalValue}
+              </span>
+              {rightPhase === 1 && (
+                <span className="text-amber-400 text-sm animate-pulse ml-2">← modifying...</span>
+              )}
+              {rightPhase >= 2 && (
+                <span className="text-red-500 text-sm ml-2 font-bold">PROTECTED</span>
+              )}
+            </div>
+          </div>
+
+          {/* Status area */}
+          <div className={`p-4 rounded-lg text-center transition-all duration-300 ${
+            rightPhase >= 3
+              ? 'bg-red-900/30 border border-red-500'
+              : rightPhase === 0
+                ? 'bg-gray-800/30 border border-gray-700'
+                : 'bg-gray-800/50 border border-gray-600'
+          }`}>
+            {rightPhase < 2 ? (
+              <span className="text-gray-500">
+                {rightPhase === 0 ? 'Awaiting operation...' : 'Processing...'}
+              </span>
+            ) : rightPhase === 2 ? (
+              <div className="text-red-500 font-bold text-xl animate-pulse">
+                ⚠ DETECTING...
               </div>
-            ))}
+            ) : (
+              <div>
+                <div className="text-red-500 font-bold text-xl mb-1">INTEGRITY VIOLATION</div>
+                <div className="text-amber-400 text-sm">INCIDENT LOGGED • ADMIN NOTIFIED</div>
+              </div>
+            )}
           </div>
 
-          <div className="w-full py-4 bg-gray-800 text-red-400 text-center rounded-lg border border-red-500 font-bold text-lg">
-            ⊘ REJECTED
-          </div>
+          {/* The victory label */}
+          {rightPhase >= 3 && (
+            <div className="mt-4 text-center">
+              <span className="text-green-400/80 text-xs font-mono tracking-wider">
+                TRUTH PRESERVED
+              </span>
+            </div>
+          )}
         </div>
       </div>
 
-      {/* Summary */}
-      <div className="text-center max-w-3xl mx-auto">
-        <p className="text-gray-400 text-lg">
-          Standard logging allows silent modification.
-          Receipts-native makes tampering cryptographically verifiable.
-        </p>
-        <p className="mt-6 text-gray-500 text-lg">
-          Click or press Space to continue
+      {/* THE TAGLINE */}
+      <div className={`text-center transition-all duration-1000 ${
+        showTagline ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
+      }`}>
+        <p className="text-2xl text-gray-200 font-medium mt-8">
+          Standard logs accept the lie. <span className="text-red-400">We preserve the truth.</span>
         </p>
       </div>
+
+      {/* Continue hint */}
+      {showTagline && (
+        <div className="text-center mt-8">
+          <p className="text-gray-500 text-lg">
+            Click or press Space to continue
+          </p>
+        </div>
+      )}
     </div>
   )
 }

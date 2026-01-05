@@ -126,3 +126,19 @@ html, body, #root {
   opacity: 0;
   transition: opacity 0.9s ease;
 }
+
+/* Counter blur effect - slight motion blur for fast-updating counter */
+.counter-blur {
+  text-shadow: 0 0 2px rgba(255, 255, 255, 0.3);
+  transition: text-shadow 0.08s ease-out;
+}
+
+/* Amber flash for counter during violations */
+@keyframes amber-flash {
+  0%, 100% { color: white; }
+  50% { color: #f59e0b; }
+}
+
+.counter-amber-flash {
+  animation: amber-flash 0.5s ease-in-out;
+}

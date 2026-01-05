@@ -143,13 +143,13 @@ const useDemoStore = create((set, get) => ({
       state: STATES.REJECT
     })
 
-    // Auto-advance after 18 seconds
+    // Auto-advance after 6 seconds (hold for impact per spec)
     setTimeout(() => {
       const currentState = get().state
       if (currentState === STATES.REJECT) {
         set({ state: STATES.COMPARISON })
       }
-    }, 18000)
+    }, 6000)
   },
 
   // Restart the demo

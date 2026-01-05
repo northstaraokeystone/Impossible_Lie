@@ -19,7 +19,6 @@ import CloseScreen from './components/CloseScreen'
 export default function App() {
   const demo = useDemo()
   const [rejectCanContinue, setRejectCanContinue] = useState(false)
-  const [attackerRole, setAttackerRole] = useState('external')
 
   // Initialize on mount
   useEffect(() => {
@@ -43,7 +42,6 @@ export default function App() {
     } else if (e.key === 'r' || e.key === 'R') {
       e.preventDefault()
       demo.restart()
-      setAttackerRole('external')
     }
   }, [demo.state, rejectCanContinue])
 
@@ -90,8 +88,6 @@ export default function App() {
             tamperedIndex={demo.tamperedIndex}
             onSelectEvent={demo.selectEvent}
             onSubmit={demo.attemptModify}
-            attackerRole={attackerRole}
-            onRoleChange={setAttackerRole}
           />
         )
 
@@ -107,7 +103,6 @@ export default function App() {
             onContinue={() => {
               if (rejectCanContinue) demo.nextState()
             }}
-            attackerRole={attackerRole}
           />
         )
 
@@ -274,9 +269,7 @@ function ModifyScreen({
   selectedEvent,
   tamperedIndex,
   onSelectEvent,
-  onSubmit,
-  attackerRole,
-  onRoleChange
+  onSubmit
 }) {
   // Auto-select the DATA_EXPORT event if nothing selected
   useEffect(() => {
@@ -325,21 +318,19 @@ function ModifyScreen({
         <ModifyPanel
           event={selectedEvent}
           onSubmit={onSubmit}
-          attackerRole={attackerRole}
-          onRoleChange={onRoleChange}
         />
       </div>
     </div>
   )
 }
 
-// Reject Screen - Show rejection with compliance report and 30-second pause
-// LAYOUT MATCHES Events/Modify screens for visual consistency
-function RejectScreen({ events, tree, tamperedIndex, tamperResult, canContinue, onCanContinue, onContinue, attackerRole }) {
-  const [countdown, setCountdown] = useState(30)
+// Reject Screen - Show rejection with forensic preservation display
+// 6-second hold for impact, then auto-advance to comparison
+function RejectScreen({ events, tree, tamperedIndex, tamperResult, canContinue, onCanContinue, onContinue }) {
+  const [countdown, setCountdown] = useState(6)
   const [shakeClass, setShakeClass] = useState('shake-once')
 
-  // 30-second countdown before allowing continue
+  // 6-second countdown before allowing continue (hold for impact)
   useEffect(() => {
     if (canContinue) return
 
@@ -404,7 +395,6 @@ function RejectScreen({ events, tree, tamperedIndex, tamperResult, canContinue, 
             tamperResult={tamperResult}
             showContinue={false}
             tamperedIndex={tamperedIndex}
-            attackerRole={attackerRole}
           />
         </div>
 
@@ -412,7 +402,7 @@ function RejectScreen({ events, tree, tamperedIndex, tamperResult, canContinue, 
         <div className="mt-6 text-center">
           {!canContinue ? (
             <p className="text-gray-300 text-xl">
-              Analyzing integrity violation... <span className="text-red-400 font-bold">{countdown}s</span>
+              Preserving forensic evidence... <span className="text-red-400 font-bold">{countdown}s</span>
             </p>
           ) : (
             <p className="text-gray-400 text-lg">
