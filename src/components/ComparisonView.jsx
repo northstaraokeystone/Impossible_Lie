@@ -69,8 +69,8 @@ export default function ComparisonView({ events = [] }) {
           {!standardModified ? (
             <button
               onClick={handleStandardModify}
-              className="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-4
-                         rounded-lg transition-colors duration-200 text-base"
+              className="w-full bg-transparent border border-red-500 text-red-400 font-bold py-3 px-4
+                         rounded-lg transition-colors duration-200 text-base hover:bg-red-500/20"
             >
               Modify Export Record
             </button>
@@ -118,7 +118,7 @@ export default function ComparisonView({ events = [] }) {
             ))}
           </div>
 
-          <div className="w-full py-4 bg-red-700 text-white text-center rounded-lg border border-red-600 font-bold text-lg">
+          <div className="w-full py-4 bg-gray-800 text-red-400 text-center rounded-lg border border-red-500 font-bold text-lg">
             ⊘ REJECTED
           </div>
         </div>

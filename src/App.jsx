@@ -223,18 +223,19 @@ function PromptScreen({ events, tree, entropy, compression, onContinue }) {
           <CompressionGauge value={compression} />
         </div>
 
-        {/* Challenge panel - centered, full width */}
-        <div className="bg-gray-900/40 border border-white/60 rounded-lg p-8 text-center">
-          <h2 className="text-3xl font-bold text-white mb-4">
+        {/* Challenge panel - centered, full width, reduced visual weight */}
+        <div className="bg-gray-900/40 border border-gray-700 rounded-lg p-6 text-center">
+          <h2 className="text-xl font-bold text-white mb-3">
             Try to change the past
           </h2>
-          <p className="text-white/90 text-xl mb-6">
+          <p className="text-white/80 text-base mb-5">
             The breach has been recorded. Can you modify the logs to hide it?
           </p>
           <button
             onClick={onContinue}
-            className="bg-red-600 hover:bg-red-700 text-white font-bold
-                       py-4 px-12 rounded-lg transition-colors duration-200 text-xl"
+            className="border border-white/60 text-white font-semibold
+                       py-3 px-10 rounded-lg transition-colors duration-200 text-base
+                       hover:bg-white/10 bg-transparent"
           >
             Modify Record
           </button>

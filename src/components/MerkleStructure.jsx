@@ -168,11 +168,11 @@ function TreeVisualization({ tree, tamperedIndex, rejected }) {
 
 export default function MerkleStructure({ tree, tamperedIndex = null, rejected = false }) {
   return (
-    <div className="w-full h-[400px] bg-gray-900/30 rounded-lg border border-gray-800 relative p-4">
+    <div className="w-full h-[400px] bg-gray-900/30 rounded-lg border border-gray-800 relative p-6">
       {/* Canvas container with inner padding to prevent cutoff */}
       <div className="w-full h-full rounded overflow-hidden">
         <Canvas
-          camera={{ position: [0, 0, 6], fov: 45 }}
+          camera={{ position: [0, 0, 8], fov: 50 }}
           style={{ background: 'transparent' }}
         >
           <ambientLight intensity={0.5} />
@@ -196,23 +196,23 @@ export default function MerkleStructure({ tree, tamperedIndex = null, rejected =
         </Canvas>
       </div>
 
-      {/* Legend - positioned inside container at bottom */}
-      <div className="absolute bottom-6 left-0 right-0 flex justify-center gap-6 text-sm font-mono text-gray-400">
+      {/* Legend - positioned inside container at bottom with better spacing */}
+      <div className="absolute bottom-4 left-0 right-0 flex justify-center gap-6 text-sm font-mono text-gray-400">
         <div className="flex items-center gap-2">
-          <div className="w-4 h-4 rounded-full bg-blue-500" />
+          <div className="w-3 h-3 rounded-full bg-blue-500" />
           <span>Leaf</span>
         </div>
         <div className="flex items-center gap-2">
-          <div className="w-4 h-4 rounded-full bg-gray-500" />
+          <div className="w-3 h-3 rounded-full bg-gray-500" />
           <span>Node</span>
         </div>
         <div className="flex items-center gap-2">
-          <div className="w-4 h-4 rounded-full bg-green-500" />
+          <div className="w-3 h-3 rounded-full bg-green-500" />
           <span>Root</span>
         </div>
         {rejected && (
           <div className="flex items-center gap-2">
-            <div className="w-4 h-4 rounded-full bg-red-500" />
+            <div className="w-3 h-3 rounded-full bg-red-500" />
             <span>Tampered</span>
           </div>
         )}

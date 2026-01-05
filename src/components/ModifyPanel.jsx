@@ -40,8 +40,8 @@ export default function ModifyPanel({ event, onSubmit }) {
   const field = getModifiableField()
 
   return (
-    <div className="bg-gray-900/50 rounded-lg p-8 border border-gray-800">
-      <h3 className="text-2xl font-bold mb-6 text-white">Modify Record</h3>
+    <div className="bg-gray-900/50 rounded-lg p-6 border border-gray-700">
+      <h3 className="text-xl font-bold mb-5 text-white">Modify Record</h3>
 
       {/* Original event display */}
       <div className="mb-6 p-4 bg-gray-800/50 rounded-lg border border-red-900/50">
@@ -50,7 +50,7 @@ export default function ModifyPanel({ event, onSubmit }) {
             className="w-3 h-3 rounded-full bg-red-500"
           />
           <span className="font-mono text-gray-400">{event.timestamp}</span>
-          <span className="font-bold font-mono text-red-500">
+          <span className="font-bold font-mono text-amber-500">
             {event.type}
           </span>
         </div>
@@ -93,8 +93,8 @@ export default function ModifyPanel({ event, onSubmit }) {
 
         <button
           type="submit"
-          className="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-4
-                     rounded-lg transition-colors duration-200 text-lg"
+          className="w-full bg-white/10 border border-red-500 text-red-400 font-bold py-3 px-4
+                     rounded-lg transition-colors duration-200 text-lg hover:bg-red-500/20"
         >
           Attempt Modification
         </button>
