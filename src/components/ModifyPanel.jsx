@@ -44,26 +44,22 @@ export default function ModifyPanel({ event, onSubmit }) {
       <h3 className="text-2xl font-bold mb-6 text-white">Modify Record</h3>
 
       {/* Original event display */}
-      <div className="mb-6 p-4 bg-gray-800/50 rounded-lg">
-        <div className="flex items-center gap-2 mb-2">
+      <div className="mb-6 p-4 bg-gray-800/50 rounded-lg border border-red-900/50">
+        <div className="flex items-center gap-2 mb-3">
           <div
-            className="w-3 h-3 rounded-full"
-            style={{ backgroundColor: getEventTypeColor(event.type) }}
+            className="w-3 h-3 rounded-full bg-red-500"
           />
           <span className="font-mono text-gray-400">{event.timestamp}</span>
-          <span
-            className="font-bold font-mono"
-            style={{ color: getEventTypeColor(event.type) }}
-          >
+          <span className="font-bold font-mono text-red-500">
             {event.type}
           </span>
         </div>
 
-        <div className="font-mono text-sm text-gray-300">
+        <div className="font-mono text-sm">
           {Object.entries(event.details).map(([key, value]) => (
-            <div key={key} className="flex gap-2">
-              <span className="text-gray-500">{key}:</span>
-              <span>{Array.isArray(value) ? `[${value.join(', ')}]` : String(value)}</span>
+            <div key={key} className="flex gap-2 mb-1">
+              <span className="text-gray-400">{key}:</span>
+              <span className="text-white">{Array.isArray(value) ? `[${value.join(', ')}]` : String(value)}</span>
             </div>
           ))}
         </div>
@@ -72,7 +68,7 @@ export default function ModifyPanel({ event, onSubmit }) {
       {/* Modification form */}
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label className="block text-sm text-gray-400 mb-2">
+          <label className="block text-base text-gray-400 mb-2">
             Change "{field.label}" from <span className="text-white font-mono">{field.value}</span> to:
           </label>
           <input
@@ -81,12 +77,12 @@ export default function ModifyPanel({ event, onSubmit }) {
             onChange={(e) => setModifiedValue(e.target.value)}
             placeholder={event.type === 'DATA_EXPORT' ? '0' : 'user_request'}
             className="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-3
-                       font-mono text-white focus:outline-none focus:border-blue-500
-                       placeholder-gray-500"
+                       font-mono text-white focus:outline-none focus:border-red-500
+                       placeholder-gray-400"
           />
         </div>
 
-        <div className="text-xs text-gray-500">
+        <div className="text-sm text-gray-300">
           {event.type === 'DATA_EXPORT' && (
             <p>Try changing the export count to 0 to hide the data exfiltration.</p>
           )}
@@ -98,7 +94,7 @@ export default function ModifyPanel({ event, onSubmit }) {
         <button
           type="submit"
           className="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-4
-                     rounded-lg transition-colors duration-200"
+                     rounded-lg transition-colors duration-200 text-lg"
         >
           Attempt Modification
         </button>

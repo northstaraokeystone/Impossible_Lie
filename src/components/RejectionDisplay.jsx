@@ -26,7 +26,7 @@ export default function RejectionDisplay({ tamperResult, showContinue = true }) 
   const compressionFailed = compressionAfter < COMPRESSION_THRESHOLD
 
   return (
-    <div className="bg-red-900/20 border border-red-500 rounded-lg p-8">
+    <div className="bg-red-900/20 border border-red-500 rounded-lg p-8" style={{ boxShadow: '0 0 40px rgba(220, 38, 38, 0.4)' }}>
       {/* Header */}
       <div className="flex items-center justify-center gap-3 mb-8">
         <div className="w-5 h-5 bg-red-500 rounded-full animate-pulse" />
@@ -64,7 +64,7 @@ export default function RejectionDisplay({ tamperResult, showContinue = true }) 
           </div>
         </div>
 
-        {/* Chain integrity */}
+        {/* Chain integrity - CRITICAL: FAILED must be RED */}
         <div className="flex items-center justify-between p-3 bg-gray-900/50 rounded-lg">
           <span className="text-gray-400">Chain integrity:</span>
           <span className="text-red-500 font-bold">FAILED</span>
@@ -82,11 +82,11 @@ export default function RejectionDisplay({ tamperResult, showContinue = true }) 
           </div>
         </div>
 
-        {/* Broken links */}
+        {/* Broken links - highlight the number */}
         <div className="p-3 bg-gray-900/50 rounded-lg">
-          <span className="text-gray-400">
+          <span className="text-gray-300">
             Modification requires recomputing{' '}
-            <span className="text-red-400 font-bold">{brokenLinks.length}</span>{' '}
+            <span className="text-red-500 font-bold text-lg">{brokenLinks.length}</span>{' '}
             nodes to root.
           </span>
         </div>

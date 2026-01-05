@@ -141,21 +141,21 @@ function IntroScreen({ onContinue }) {
       className="screen-container cursor-pointer bg-[#0a0a0a]"
       onClick={onContinue}
     >
-      <div className="text-center max-w-3xl">
-        <div className="text-red-500 font-mono text-base tracking-widest font-medium mb-6 animate-pulse">
+      <div className="text-center max-w-4xl">
+        <div className="text-red-500 font-mono text-lg tracking-widest font-semibold mb-8 animate-pulse">
           SECURITY INCIDENT DETECTED
         </div>
 
-        <h1 className="text-6xl md:text-7xl font-bold mb-8">
+        <h1 className="text-7xl md:text-8xl font-bold mb-10">
           The Impossible Lie
         </h1>
 
-        <p className="text-xl md:text-2xl text-gray-400 mb-10 leading-relaxed max-w-2xl mx-auto">
+        <p className="text-xl md:text-2xl text-gray-400 mb-12 leading-loose max-w-3xl mx-auto">
           A third-party integration just exfiltrated 4,942 customer records.
           Watch how receipts-native logging makes tampering mathematically impossible.
         </p>
 
-        <div className="text-gray-500 text-base">
+        <div className="text-gray-500 text-lg">
           Click or press Space to begin
         </div>
       </div>
@@ -224,16 +224,16 @@ function PromptScreen({ events, tree, entropy, compression, onContinue }) {
         </div>
 
         {/* Challenge panel - centered, full width */}
-        <div className="bg-yellow-900/20 border border-yellow-500 rounded-lg p-8 text-center">
-          <h2 className="text-3xl font-bold text-yellow-400 mb-4">
+        <div className="bg-gray-900/40 border border-white/60 rounded-lg p-8 text-center">
+          <h2 className="text-3xl font-bold text-white mb-4">
             Try to change the past
           </h2>
-          <p className="text-gray-400 text-xl mb-6">
+          <p className="text-white/90 text-xl mb-6">
             The breach has been recorded. Can you modify the logs to hide it?
           </p>
           <button
             onClick={onContinue}
-            className="bg-yellow-600 hover:bg-yellow-700 text-white font-bold
+            className="bg-red-600 hover:bg-red-700 text-white font-bold
                        py-4 px-12 rounded-lg transition-colors duration-200 text-xl"
           >
             Modify Record
@@ -366,8 +366,8 @@ function RejectScreen({ events, tree, tamperedIndex, tamperResult, canContinue, 
         {/* Countdown or continue message */}
         <div className="mt-6 text-center">
           {!canContinue ? (
-            <p className="text-gray-500 text-lg">
-              Analyzing integrity violation... {countdown}s
+            <p className="text-gray-300 text-xl">
+              Analyzing integrity violation... <span className="text-red-400 font-bold">{countdown}s</span>
             </p>
           ) : (
             <p className="text-gray-400 text-lg">

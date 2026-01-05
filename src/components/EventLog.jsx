@@ -19,14 +19,14 @@ export default function EventLog({ events = [], tamperedIndex = null, onEventCli
   return (
     <div
       ref={containerRef}
-      className="bg-gray-900/50 rounded-lg p-6 font-mono text-base overflow-y-auto h-[400px] border border-gray-800"
+      className="bg-gray-900/50 rounded-lg p-6 font-mono text-sm overflow-y-auto min-h-[320px] max-h-[400px] border border-gray-800"
     >
       {events.length === 0 ? (
         <div className="text-gray-500 text-center py-4">
           Waiting for events...
         </div>
       ) : (
-        <div className="space-y-2">
+        <div className="space-y-3">
           {events.map((event, index) => {
             const isTampered = index === tamperedIndex
             const isLatest = index === events.length - 1 && tamperedIndex === null
@@ -36,47 +36,43 @@ export default function EventLog({ events = [], tamperedIndex = null, onEventCli
                 key={event.id}
                 onClick={() => onEventClick && onEventClick(index)}
                 className={`
-                  flex items-start gap-3 p-2 rounded transition-all duration-300
+                  p-3 rounded transition-all duration-300
                   ${isTampered ? 'bg-red-900/30 border border-red-500' : ''}
                   ${isLatest ? 'bg-blue-900/20' : ''}
                   ${onEventClick ? 'cursor-pointer hover:bg-gray-800/50' : ''}
                 `}
               >
-                {/* Event type indicator */}
-                <div
-                  className="w-2 h-2 rounded-full mt-1.5 flex-shrink-0"
-                  style={{ backgroundColor: getEventTypeColor(event.type) }}
-                />
+                {/* Top row: timestamp and type */}
+                <div className="flex items-center gap-2 mb-1">
+                  {/* Event type indicator */}
+                  <div
+                    className="w-2 h-2 rounded-full flex-shrink-0"
+                    style={{ backgroundColor: getEventTypeColor(event.type) }}
+                  />
 
-                {/* Timestamp */}
-                <span className="text-gray-500 flex-shrink-0">
-                  {event.timestamp}
-                </span>
+                  {/* Timestamp */}
+                  <span className="text-gray-500 flex-shrink-0">
+                    {event.timestamp}
+                  </span>
 
-                {/* Separator */}
-                <span className="text-gray-600">|</span>
+                  {/* Type */}
+                  <span
+                    className="font-bold flex-shrink-0"
+                    style={{ color: getEventTypeColor(event.type) }}
+                  >
+                    {event.type}
+                  </span>
+                </div>
 
-                {/* Type */}
-                <span
-                  className="font-bold flex-shrink-0"
-                  style={{ color: getEventTypeColor(event.type) }}
-                >
-                  {event.type}
-                </span>
-
-                {/* Separator */}
-                <span className="text-gray-600">|</span>
-
-                {/* Details */}
-                <span className="text-gray-300 break-all">
+                {/* Bottom row: Details - on its own line to prevent wrapping issues */}
+                <div className="text-gray-300 pl-4 text-sm whitespace-normal">
                   {Object.entries(event.details).map(([key, value], i) => (
-                    <span key={key}>
-                      {i > 0 && ', '}
+                    <span key={key} className="mr-3">
                       <span className="text-gray-500">{key}:</span>{' '}
-                      {Array.isArray(value) ? `[${value.join(', ')}]` : String(value)}
+                      <span className="text-white">{Array.isArray(value) ? `[${value.join(', ')}]` : String(value)}</span>
                     </span>
                   ))}
-                </span>
+                </div>
               </div>
             )
           })}
