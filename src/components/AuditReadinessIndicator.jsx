@@ -13,16 +13,16 @@ export default function AuditReadinessIndicator({ isCompromised = false }) {
       <div className="flex justify-between items-center text-base font-mono">
         <span className="text-gray-400">AUDIT READINESS</span>
         <span
-          className={`font-bold text-lg ${isCompromised ? 'text-red-500' : 'text-green-500'}`}
+          className={`font-bold text-lg ${isCompromised ? 'text-[#cc0000]' : 'text-[#00aa66]'}`}
         >
           {percentage}%
         </span>
       </div>
-      <div className="bg-gray-900/50 rounded-lg p-3 border border-gray-800">
+      <div className="bg-[#111111] rounded-lg p-3 border border-gray-800">
         <div className="flex items-center gap-3">
           <div className="w-full h-3 rounded-full bg-gray-800">
             <div
-              className={`h-full rounded-full transition-all duration-500 ${isCompromised ? 'bg-red-500' : 'bg-green-500'}`}
+              className={`h-full rounded-full transition-all duration-500 ${isCompromised ? 'bg-[#cc0000]' : 'bg-[#00aa66]'}`}
               style={{ width: `${percentage}%` }}
             />
           </div>

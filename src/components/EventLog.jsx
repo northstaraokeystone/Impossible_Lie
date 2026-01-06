@@ -19,7 +19,7 @@ export default function EventLog({ events = [], tamperedIndex = null, onEventCli
   return (
     <div
       ref={containerRef}
-      className="bg-gray-900/50 rounded-lg p-6 font-mono text-sm overflow-y-auto min-h-[320px] max-h-[400px] border border-gray-800"
+      className="bg-[#111111] rounded-lg p-6 font-mono text-sm overflow-y-auto min-h-[320px] max-h-[400px] border border-gray-800"
     >
       {events.length === 0 ? (
         <div className="text-gray-500 text-center py-4">
@@ -37,8 +37,8 @@ export default function EventLog({ events = [], tamperedIndex = null, onEventCli
                 onClick={() => onEventClick && onEventClick(index)}
                 className={`
                   p-3 rounded transition-all duration-[900ms]
-                  ${isTampered ? 'bg-red-900/30 border border-red-500' : ''}
-                  ${isLatest ? 'bg-blue-900/20' : ''}
+                  ${isTampered ? 'bg-[#1a0a0a] border border-[#cc0000]' : ''}
+                  ${isLatest ? 'bg-[#1a1a1a]' : ''}
                   ${onEventClick ? 'cursor-pointer hover:bg-gray-800/50' : ''}
                 `}
               >

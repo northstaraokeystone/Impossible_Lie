@@ -102,12 +102,12 @@ export function formatEvent(event) {
  */
 export function getEventTypeColor(type) {
   const colors = {
-    TOKEN_GRANT: '#3b82f6',    // blue
+    TOKEN_GRANT: '#6b7280',    // muted gray (neutral)
     DATA_ACCESS: '#6b7280',     // gray
-    DATA_EXPORT: '#eab308',     // yellow (warning)
-    TOKEN_REVOKE: '#ef4444'     // red
+    DATA_EXPORT: '#cc9900',     // muted amber (warning)
+    TOKEN_REVOKE: '#cc0000'     // muted crimson (error)
   }
-  return colors[type] || '#ffffff'
+  return colors[type] || '#cccccc'
 }
 
 /**

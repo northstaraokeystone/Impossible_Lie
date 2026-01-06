@@ -148,7 +148,7 @@ function IntroScreen({ onContinue }) {
       onClick={onContinue}
     >
       <div className="text-center max-w-4xl">
-        <div className="text-red-500 font-mono text-lg tracking-widest font-semibold mb-8 animate-pulse">
+        <div className="text-[#cc0000] font-mono text-lg tracking-widest font-semibold mb-8">
           SECURITY INCIDENT DETECTED
         </div>
 
@@ -240,18 +240,18 @@ function PromptScreen({ events, tree, isCompromised, onContinue }) {
         </div>
 
         {/* Challenge panel - centered, full width, reduced visual weight */}
-        <div className="bg-gray-900/40 border border-gray-700 rounded-lg p-6 text-center">
+        <div className="bg-[#111111] border border-gray-800 rounded-lg p-6 text-center">
           <h2 className="text-xl font-bold text-white mb-3">
             The breach is recorded. What if someone tries to hide it?
           </h2>
-          <p className="text-white/80 text-base mb-5">
+          <p className="text-gray-400 text-base mb-5">
             Watch what happens when a rogue admin attempts to modify the logs.
           </p>
           <button
             onClick={onContinue}
-            className="border border-red-500/60 text-red-400 font-semibold
+            className="border border-[#cc0000]/60 text-[#cc0000] font-semibold
                        py-3 px-10 rounded-lg transition-colors duration-200 text-base
-                       hover:bg-red-500/10 bg-transparent"
+                       hover:bg-[#cc0000]/10 bg-transparent"
           >
             SIMULATE INSIDER ATTACK
           </button>
@@ -309,10 +309,10 @@ function ModifyScreen({
       <div className="content-wrapper">
         <div className="flex items-center justify-between mb-8">
           <div className="text-center flex-1">
-            <div className="text-red-500 font-mono text-sm tracking-widest mb-2 animate-pulse">
+            <div className="text-gray-500 font-mono text-sm tracking-widest mb-2">
               [ SIMULATION IN PROGRESS ]
             </div>
-            <h2 className="text-4xl font-bold text-amber-500">
+            <h2 className="text-4xl font-bold text-[#cc0000]">
               ROGUE ADMIN DETECTED
             </h2>
           </div>
@@ -341,53 +341,53 @@ function ModifyScreen({
           <AuditReadinessIndicator isCompromised={isCompromised} />
         </div>
 
-        {/* Attack simulation panel - replaces manual ModifyPanel */}
-        <div className="bg-gray-900/80 border border-amber-600 rounded-lg p-8">
+        {/* Attack simulation panel - glass effect with red border */}
+        <div className="bg-[#0a0a0a] border border-[#cc0000] rounded-lg p-8" style={{ boxShadow: '0 0 20px rgba(204, 0, 0, 0.3)' }}>
           {/* Attack header */}
-          <div className="mb-6 p-4 bg-red-900/30 border border-red-600 rounded-lg">
+          <div className="mb-6 p-4 bg-[#111111] border border-[#cc0000]/50 rounded-lg">
             <div className="flex items-center gap-3 mb-2">
-              <div className="w-3 h-3 rounded-full bg-red-500 animate-pulse" />
-              <span className="text-red-400 font-mono font-bold tracking-wider">
+              <div className="w-3 h-3 rounded-full bg-[#cc0000] animate-pulse" />
+              <span className="text-[#cc0000] font-mono font-bold tracking-wider">
                 SIMULATION: ROGUE ADMIN DETECTED
               </span>
             </div>
-            <p className="text-amber-200/70 text-sm font-mono">
+            <p className="text-gray-400 text-sm font-mono">
               Attempting unauthorized modification...
             </p>
           </div>
 
           {/* Target display */}
-          <div className="mb-6 p-4 bg-gray-800/50 rounded-lg border border-amber-500/50">
-            <div className="text-gray-400 text-xs uppercase tracking-wider mb-2">Target Identified</div>
-            <div className="text-2xl font-bold text-amber-400 font-mono">
+          <div className="mb-6 p-4 bg-[#111111] rounded-lg border border-gray-800">
+            <div className="text-gray-500 text-xs uppercase tracking-wider mb-2">Target Identified</div>
+            <div className="text-2xl font-bold text-white font-mono">
               TARGET: Data Export ({recordCount.toLocaleString()} records)
             </div>
           </div>
 
           {/* Attack progress */}
           <div className="space-y-3 font-mono text-sm">
-            <div className={`flex items-center gap-3 ${attackPhase >= 0 ? 'text-amber-400' : 'text-gray-600'}`}>
+            <div className={`flex items-center gap-3 ${attackPhase >= 0 ? 'text-gray-300' : 'text-gray-600'}`}>
               <span className={attackPhase === 0 ? 'animate-pulse' : ''}>●</span>
               <span>Privileged access confirmed (ROOT)</span>
-              {attackPhase >= 1 && <span className="text-green-500 ml-auto">✓</span>}
+              {attackPhase >= 1 && <span className="text-gray-400 ml-auto">✓</span>}
             </div>
-            <div className={`flex items-center gap-3 ${attackPhase >= 1 ? 'text-amber-400' : 'text-gray-600'}`}>
+            <div className={`flex items-center gap-3 ${attackPhase >= 1 ? 'text-gray-300' : 'text-gray-600'}`}>
               <span className={attackPhase === 1 ? 'animate-pulse' : ''}>●</span>
               <span>Targeting DATA_EXPORT record...</span>
-              {attackPhase >= 2 && <span className="text-green-500 ml-auto">✓</span>}
+              {attackPhase >= 2 && <span className="text-gray-400 ml-auto">✓</span>}
             </div>
-            <div className={`flex items-center gap-3 ${attackPhase >= 2 ? 'text-red-400' : 'text-gray-600'}`}>
+            <div className={`flex items-center gap-3 ${attackPhase >= 2 ? 'text-[#cc0000]' : 'text-gray-600'}`}>
               <span className={attackPhase === 2 ? 'animate-pulse' : ''}>●</span>
               <span>Attempting to modify records: {recordCount.toLocaleString()} → 0</span>
             </div>
           </div>
 
           {/* Attack status */}
-          <div className="mt-6 text-center text-gray-400 text-sm">
+          <div className="mt-6 text-center text-gray-500 text-sm">
             {attackPhase < 2 ? (
-              <span className="animate-pulse">Attack sequence in progress...</span>
+              <span>Attack sequence in progress...</span>
             ) : (
-              <span className="text-red-400 animate-pulse">Executing modification attempt...</span>
+              <span className="text-[#cc0000]">Executing modification attempt...</span>
             )}
           </div>
         </div>
@@ -435,7 +435,7 @@ function RejectScreen({ events, tree, tamperedIndex, tamperResult, canContinue, 
         {/* Header with status indicators */}
         <div className="flex items-center justify-between mb-8">
           <div className="text-center">
-            <h1 className="text-5xl md:text-6xl font-bold text-red-500 animate-pulse">
+            <h1 className="text-5xl md:text-6xl font-bold text-[#cc0000]">
               INTEGRITY VIOLATION
             </h1>
           </div>
@@ -474,7 +474,7 @@ function RejectScreen({ events, tree, tamperedIndex, tamperResult, canContinue, 
         <div className="mt-6 text-center">
           {!canContinue ? (
             <p className="text-gray-300 text-xl">
-              Preserving forensic evidence... <span className="text-red-400 font-bold">{countdown}s</span>
+              Preserving forensic evidence... <span className="text-white font-bold">{countdown}s</span>
             </p>
           ) : (
             <p className="text-gray-400 text-lg">

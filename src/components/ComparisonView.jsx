@@ -58,43 +58,37 @@ export default function ComparisonView({ events = [] }) {
 
       {/* 50/50 Split Screen */}
       <div className="grid grid-cols-2 gap-8 pt-12">
-        {/* LEFT PANEL - The Silent Failure */}
-        <div className={`bg-gray-900 rounded-lg p-8 border border-gray-700 transition-all duration-500 ${
-          leftPhase >= 3 ? 'border-green-500/50' : ''
-        }`}>
+        {/* LEFT PANEL - The Silent Failure (BORING - fraud looks mundane) */}
+        <div className="bg-black rounded-lg p-8 border border-gray-800 transition-all duration-500">
           <div className="mb-6">
-            <h3 className="text-xl font-bold text-gray-300 mb-1">STANDARD LOGGING</h3>
-            <p className="text-sm text-gray-500 font-mono">(Splunk / Datadog / Traditional)</p>
+            <h3 className="text-xl font-bold text-gray-400 mb-1">STANDARD LOGGING</h3>
+            <p className="text-sm text-gray-600 font-mono">(Splunk / Datadog / Traditional)</p>
           </div>
 
           {/* Record display */}
-          <div className="bg-gray-800/50 rounded-lg p-6 mb-6 font-mono">
-            <div className="text-gray-400 text-sm mb-2">DATA_EXPORT</div>
+          <div className="bg-[#111111] rounded-lg p-6 mb-6 font-mono border border-gray-800">
+            <div className="text-gray-500 text-sm mb-2">DATA_EXPORT</div>
             <div className="flex items-center gap-2">
-              <span className="text-gray-500">records:</span>
-              <span className={`text-2xl font-bold transition-all duration-500 ${
-                leftPhase >= 2 ? 'text-green-400' : 'text-white'
+              <span className="text-gray-600">records:</span>
+              <span className={`text-xl transition-all duration-500 ${
+                leftPhase >= 2 ? 'text-[#6b8e6b]' : 'text-gray-400'
               }`}>
                 {leftPhase >= 2 ? tamperedValue : originalValue}
               </span>
               {leftPhase === 1 && (
-                <span className="text-amber-400 text-sm animate-pulse ml-2">← modifying...</span>
+                <span className="text-gray-500 text-sm ml-2">← modifying...</span>
               )}
             </div>
           </div>
 
-          {/* Status area */}
-          <div className={`p-4 rounded-lg text-center transition-all duration-500 ${
-            leftPhase >= 3
-              ? 'bg-green-900/30 border border-green-500'
-              : 'bg-gray-800/30 border border-gray-700'
-          }`}>
+          {/* Status area - deliberately understated */}
+          <div className="p-4 rounded-lg text-center bg-[#111111] border border-gray-800">
             {leftPhase < 3 ? (
-              <span className="text-gray-500">Awaiting operation...</span>
+              <span className="text-gray-600">Awaiting operation...</span>
             ) : (
               <div>
-                <div className="text-green-400 font-bold text-xl mb-1">UPDATE SUCCESSFUL</div>
-                <div className="text-gray-500 text-sm">No alert. No warning. Nothing.</div>
+                <div className="text-[#6b8e6b] text-sm mb-1">✓ Record updated successfully.</div>
+                <div className="text-gray-600 text-xs">No alert. No warning. Nothing.</div>
               </div>
             )}
           </div>
@@ -102,63 +96,61 @@ export default function ComparisonView({ events = [] }) {
           {/* The horror label */}
           {leftPhase >= 3 && (
             <div className="mt-4 text-center">
-              <span className="text-red-400/60 text-xs font-mono tracking-wider">
+              <span className="text-gray-500 text-xs font-mono tracking-wider">
                 THE LIE BECOMES THE TRUTH
               </span>
             </div>
           )}
         </div>
 
-        {/* RIGHT PANEL - Active Defense */}
-        <div className={`bg-gray-900 rounded-lg p-8 border transition-all duration-300 ${
+        {/* RIGHT PANEL - Active Defense (SHARP - black bg, red border) */}
+        <div className={`bg-black rounded-lg p-8 transition-all duration-300 ${
           rightPhase >= 2
-            ? 'border-red-500 shadow-[0_0_30px_rgba(239,68,68,0.3)]'
-            : 'border-gray-700'
-        } ${rightPhase === 2 ? 'animate-pulse' : ''}`}>
+            ? 'border-[3px] border-[#cc0000] shadow-[0_0_20px_rgba(204,0,0,0.3)]'
+            : 'border border-gray-800'
+        }`}>
           <div className="mb-6">
-            <h3 className="text-xl font-bold text-green-400 mb-1">RECEIPTS-NATIVE</h3>
+            <h3 className="text-xl font-bold text-white mb-1">RECEIPTS-NATIVE</h3>
             <p className="text-sm text-gray-500 font-mono">(Unbreakable Chain)</p>
           </div>
 
           {/* Record display */}
-          <div className={`bg-gray-800/50 rounded-lg p-6 mb-6 font-mono transition-all duration-300 ${
-            rightPhase >= 2 ? 'border border-red-500/50' : ''
+          <div className={`bg-[#111111] rounded-lg p-6 mb-6 font-mono transition-all duration-300 border ${
+            rightPhase >= 2 ? 'border-[#cc0000]/50' : 'border-gray-800'
           }`}>
             <div className="text-gray-400 text-sm mb-2">DATA_EXPORT</div>
             <div className="flex items-center gap-2">
               <span className="text-gray-500">records:</span>
-              <span className="text-2xl font-bold text-white">
+              <span className="text-xl font-bold text-white">
                 {originalValue}
               </span>
               {rightPhase === 1 && (
-                <span className="text-amber-400 text-sm animate-pulse ml-2">← modifying...</span>
+                <span className="text-gray-400 text-sm ml-2">← analyzing...</span>
               )}
               {rightPhase >= 2 && (
-                <span className="text-red-500 text-sm ml-2 font-bold">PROTECTED</span>
+                <span className="text-[#cc0000] text-sm ml-2 font-bold">PROTECTED</span>
               )}
             </div>
           </div>
 
           {/* Status area */}
-          <div className={`p-4 rounded-lg text-center transition-all duration-300 ${
+          <div className={`p-4 rounded-lg text-center transition-all duration-300 bg-[#111111] ${
             rightPhase >= 3
-              ? 'bg-red-900/30 border border-red-500'
-              : rightPhase === 0
-                ? 'bg-gray-800/30 border border-gray-700'
-                : 'bg-gray-800/50 border border-gray-600'
+              ? 'border-2 border-[#cc0000]'
+              : 'border border-gray-800'
           }`}>
             {rightPhase < 2 ? (
               <span className="text-gray-500">
                 {rightPhase === 0 ? 'Awaiting operation...' : 'Analyzing cryptographic signatures...'}
               </span>
             ) : rightPhase === 2 ? (
-              <div className="text-red-500 font-bold text-xl animate-pulse">
-                ⚠ DETECTING...
+              <div className="text-[#cc0000] font-bold text-xl">
+                DETECTING...
               </div>
             ) : (
               <div>
-                <div className="text-red-500 font-bold text-xl mb-1">INTEGRITY VIOLATION</div>
-                <div className="text-amber-400 text-sm">INCIDENT LOGGED • ADMIN NOTIFIED</div>
+                <div className="text-[#cc0000] font-bold text-xl mb-1">INTEGRITY VIOLATION</div>
+                <div className="text-gray-400 text-sm">INCIDENT LOGGED • ADMIN NOTIFIED</div>
               </div>
             )}
           </div>
@@ -166,7 +158,7 @@ export default function ComparisonView({ events = [] }) {
           {/* The victory label */}
           {rightPhase >= 3 && (
             <div className="mt-4 text-center">
-              <span className="text-green-400/80 text-xs font-mono tracking-wider">
+              <span className="text-[#00aa66] text-xs font-mono tracking-wider">
                 THE TRUTH IS PRESERVED
               </span>
             </div>
@@ -178,8 +170,8 @@ export default function ComparisonView({ events = [] }) {
       <div className={`text-center transition-all duration-1000 ${
         showTagline ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
       }`}>
-        <p className="text-2xl text-gray-200 font-medium mt-8">
-          Standard logs accept the lie. <span className="text-red-400">We preserve the truth.</span>
+        <p className="text-2xl text-gray-300 font-medium mt-8">
+          Standard logs accept the lie. <span className="text-[#cc0000]">We preserve the truth.</span>
         </p>
       </div>
 

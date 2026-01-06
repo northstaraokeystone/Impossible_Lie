@@ -32,8 +32,8 @@ export default function EventsProcessedCounter({ baseCount = 1240000 }) {
   }
 
   return (
-    <div className="bg-gray-900/50 rounded-lg px-4 py-2 border border-gray-800 inline-flex items-center gap-3">
-      <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+    <div className="bg-[#111111] rounded-lg px-4 py-2 border border-gray-800 inline-flex items-center gap-3">
+      <div className="w-2 h-2 rounded-full bg-[#00aa66]" />
       <span className="text-gray-400 font-mono text-sm">Events Processed:</span>
       <span className="text-white font-mono font-bold text-lg tabular-nums counter-blur">
         {formatNumber(count)}+

@@ -43,15 +43,15 @@ export default function ModifyPanel({ event, onSubmit }) {
   return (
     <div className="bg-gray-900/50 rounded-lg p-6 border border-gray-700">
       {/* Privileged Access Abuse Header */}
-      <div className="mb-6 p-4 bg-amber-900/30 border border-amber-600 rounded-lg">
+      <div className="mb-6 p-4 bg-[#111111] border border-[#cc0000]/50 rounded-lg">
         <div className="flex items-center gap-3 mb-2">
-          <div className="text-amber-500 font-mono text-sm tracking-widest">[ SIMULATING: PRIVILEGED ACCESS ABUSE ]</div>
+          <div className="text-gray-400 font-mono text-sm tracking-widest">[ SIMULATING: PRIVILEGED ACCESS ABUSE ]</div>
         </div>
         <div className="flex items-center gap-3">
-          <div className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
-          <span className="font-mono text-red-400 font-bold tracking-wider">USER: ROOT (UNRESTRICTED ACCESS)</span>
+          <div className="w-2 h-2 rounded-full bg-[#cc0000] animate-pulse" />
+          <span className="font-mono text-[#cc0000] font-bold tracking-wider">USER: ROOT (UNRESTRICTED ACCESS)</span>
         </div>
-        <p className="text-amber-200/70 text-sm mt-2 font-mono">
+        <p className="text-gray-400 text-sm mt-2 font-mono">
           Full administrative credentials active
         </p>
       </div>
@@ -64,13 +64,13 @@ export default function ModifyPanel({ event, onSubmit }) {
       </div>
 
       {/* Original event display */}
-      <div className="mb-6 p-4 bg-gray-800/50 rounded-lg border border-red-900/50">
+      <div className="mb-6 p-4 bg-[#111111] rounded-lg border border-gray-800">
         <div className="flex items-center gap-2 mb-3">
           <div
-            className="w-3 h-3 rounded-full bg-red-500"
+            className="w-3 h-3 rounded-full bg-[#cc9900]"
           />
           <span className="font-mono text-gray-400">{event.timestamp}</span>
-          <span className="font-bold font-mono text-amber-500">
+          <span className="font-bold font-mono text-gray-300">
             {event.type}
           </span>
         </div>
@@ -113,8 +113,8 @@ export default function ModifyPanel({ event, onSubmit }) {
 
         <button
           type="submit"
-          className="w-full bg-white/10 border border-red-500 text-red-400 font-bold py-3 px-4
-                     rounded-lg transition-colors duration-[600ms] text-lg hover:bg-red-500/20"
+          className="w-full bg-transparent border border-[#cc0000] text-[#cc0000] font-bold py-3 px-4
+                     rounded-lg transition-colors duration-[600ms] text-lg hover:bg-[#cc0000]/10"
         >
           Attempt Modification (as ROOT)
         </button>

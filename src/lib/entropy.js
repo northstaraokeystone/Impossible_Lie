@@ -63,9 +63,9 @@ export function classifyEntropy(entropy) {
  * @returns {string} Hex color code
  */
 export function getEntropyColor(entropy) {
-  if (entropy < 0.40) return '#22c55e' // green - legitimate
-  if (entropy < 0.60) return '#eab308' // yellow - suspicious
-  return '#ef4444' // red - fraudulent
+  if (entropy < 0.40) return '#00aa66' // muted emerald - legitimate
+  if (entropy < 0.60) return '#cc9900' // muted amber - suspicious
+  return '#cc0000' // muted crimson - fraudulent
 }
 
 /**

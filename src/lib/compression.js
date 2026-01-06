@@ -60,9 +60,9 @@ export function classifyCompression(ratio) {
  * @returns {string} Hex color code
  */
 export function getCompressionColor(ratio) {
-  if (ratio > 0.70) return '#22c55e' // green - legitimate
-  if (ratio > 0.50) return '#eab308' // yellow - suspicious
-  return '#ef4444' // red - fraudulent
+  if (ratio > 0.70) return '#00aa66' // muted emerald - legitimate
+  if (ratio > 0.50) return '#cc9900' // muted amber - suspicious
+  return '#cc0000' // muted crimson - fraudulent
 }
 
 /**
