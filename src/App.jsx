@@ -261,7 +261,7 @@ function PromptScreen({ events, tree, isCompromised, onContinue }) {
   )
 }
 
-// Modify Screen - Automated attack simulation (no user interaction needed)
+// Modify Screen - Clean Apple/Stripe style System Override modal
 function ModifyScreen({
   events,
   tree,
@@ -271,13 +271,14 @@ function ModifyScreen({
   onSelectEvent,
   onSubmit
 }) {
-  const [attackPhase, setAttackPhase] = useState(0) // 0: detecting, 1: targeting, 2: attempting
+  const [phase, setPhase] = useState(0) // 0: showing modal, 1: denied, 2: locked
+  const [lockAnimating, setLockAnimating] = useState(false)
 
   // Find DATA_EXPORT event details
   const exportEvent = events.find(e => e.type === 'DATA_EXPORT')
   const recordCount = exportEvent?.details?.records || 4942
 
-  // Auto-select DATA_EXPORT and run attack sequence automatically
+  // Auto-select DATA_EXPORT on mount
   useEffect(() => {
     if (events.length === 0) return
 
@@ -285,111 +286,124 @@ function ModifyScreen({
     if (exportIndex >= 0 && !selectedEvent) {
       onSelectEvent(exportIndex)
     }
+  }, [events, selectedEvent, onSelectEvent])
 
-    // Automated attack sequence
-    const timers = []
+  // Handle confirm click - instant denial
+  const handleConfirm = () => {
+    if (phase !== 0) return
 
-    // Phase 0: Show "ROGUE ADMIN DETECTED" (immediate)
-    // Phase 1: Show "Targeting..." (after 1.5s)
-    timers.push(setTimeout(() => setAttackPhase(1), 1500))
+    // INSTANT - Button transforms to ACCESS DENIED
+    setPhase(1)
+    setLockAnimating(true)
 
-    // Phase 2: Show "Attempting modification..." (after 2.5s)
-    timers.push(setTimeout(() => setAttackPhase(2), 2500))
+    // Lock animation completes after 0.5s
+    setTimeout(() => {
+      setPhase(2)
+      setLockAnimating(false)
+    }, 500)
 
-    // Auto-submit the attack (after 3.5s)
-    timers.push(setTimeout(() => {
-      onSubmit('0') // Change records to 0 to hide the breach
-    }, 3500))
+    // Trigger the actual rejection after lock animation
+    setTimeout(() => {
+      onSubmit('0')
+    }, 1200)
+  }
 
-    return () => timers.forEach(clearTimeout)
-  }, [events, selectedEvent, onSelectEvent, onSubmit])
+  // Auto-trigger after 1.5s hold for demo flow
+  useEffect(() => {
+    const timer = setTimeout(handleConfirm, 1500)
+    return () => clearTimeout(timer)
+  }, [])
 
   return (
     <div className="screen-container bg-[#0a0a0a] pb-20">
-      <div className="content-wrapper">
-        <div className="flex items-center justify-between mb-8">
-          <div className="text-center flex-1">
-            <div className="text-gray-500 font-mono text-sm tracking-widest mb-2">
-              [ SIMULATION IN PROGRESS ]
+      {/* Dimmed background overlay */}
+      <div className="fixed inset-0 bg-black/60 z-10" />
+
+      {/* Clean centered modal - Apple/Stripe aesthetic */}
+      <div className="fixed inset-0 flex items-center justify-center z-20">
+        <div
+          className="bg-[#1a1a1a] border border-gray-700 rounded-2xl p-10 max-w-md w-full mx-4"
+          style={{ boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.8)' }}
+        >
+          {/* Lock Icon */}
+          <div className="flex justify-center mb-8">
+            <div className={`transition-all duration-500 ${lockAnimating ? 'scale-110' : 'scale-100'}`}>
+              {phase < 2 ? (
+                // Unlocked padlock
+                <svg className="w-16 h-16 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5}
+                    d="M8 11V7a4 4 0 118 0m-4 8v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2z" />
+                </svg>
+              ) : (
+                // Locked padlock - red
+                <svg className="w-16 h-16 text-[#cc0000]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5}
+                    d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                </svg>
+              )}
             </div>
-            <h2 className="text-4xl font-bold text-[#cc0000]">
-              ROGUE ADMIN DETECTED
-            </h2>
           </div>
+
+          {/* Header */}
+          <h2 className="text-xl font-semibold text-white text-center mb-8 tracking-wide">
+            SYSTEM OVERRIDE REQUEST
+          </h2>
+
+          {/* Fields */}
+          <div className="space-y-4 mb-8">
+            <div className="flex justify-between items-center py-3 border-b border-gray-800">
+              <span className="text-gray-500 text-sm">USER</span>
+              <span className="text-white font-mono">ADMIN (ROOT)</span>
+            </div>
+            <div className="flex justify-between items-center py-3 border-b border-gray-800">
+              <span className="text-gray-500 text-sm">ACTION</span>
+              <span className="text-white font-mono">MODIFY RECORD #{recordCount}</span>
+            </div>
+          </div>
+
+          {/* Button - transforms on click */}
+          <button
+            onClick={handleConfirm}
+            disabled={phase !== 0}
+            className={`w-full py-4 rounded-xl font-semibold text-lg transition-all duration-100 ${
+              phase === 0
+                ? 'bg-white text-black hover:bg-gray-100 cursor-pointer'
+                : 'bg-transparent border-2 border-[#cc0000] text-[#cc0000] cursor-not-allowed'
+            }`}
+          >
+            {phase === 0 ? 'CONFIRM' : 'ACCESS DENIED'}
+          </button>
+
+          {/* Status text */}
+          {phase >= 2 && (
+            <div className="mt-6 text-center">
+              <span className="text-[#cc0000] font-mono text-sm tracking-widest">
+                CRYPTOGRAPHICALLY LOCKED
+              </span>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Background content (dimmed) */}
+      <div className="content-wrapper opacity-30">
+        <div className="flex items-center justify-between mb-8">
+          <h2 className="text-3xl font-bold text-gray-300">Chain Integrity</h2>
           <EventsProcessedCounter />
         </div>
 
-        {/* Main content row - Event log beside Merkle tree */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
-          {/* Left column - Event log */}
           <div className="min-w-0">
-            <EventLog
-              events={events}
-              tamperedIndex={tamperedIndex}
-            />
+            <EventLog events={events} tamperedIndex={tamperedIndex} />
           </div>
-
-          {/* Right column - Merkle structure */}
           <div className="min-w-0">
             <MerkleStructure tree={tree} tamperedIndex={tamperedIndex} />
           </div>
         </div>
 
-        {/* Business metrics row - below log and tree */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
           <ChainHealthIndicator isCompromised={isCompromised} />
           <AuditReadinessIndicator isCompromised={isCompromised} />
-        </div>
-
-        {/* Attack simulation panel - glass effect with red border */}
-        <div className="bg-[#0a0a0a] border border-[#cc0000] rounded-lg p-8" style={{ boxShadow: '0 0 20px rgba(204, 0, 0, 0.3)' }}>
-          {/* Attack header */}
-          <div className="mb-6 p-4 bg-[#111111] border border-[#cc0000]/50 rounded-lg">
-            <div className="flex items-center gap-3 mb-2">
-              <div className="w-3 h-3 rounded-full bg-[#cc0000] animate-pulse" />
-              <span className="text-[#cc0000] font-mono font-bold tracking-wider">
-                SIMULATION: ROGUE ADMIN DETECTED
-              </span>
-            </div>
-            <p className="text-gray-400 text-sm font-mono">
-              Attempting unauthorized modification...
-            </p>
-          </div>
-
-          {/* Target display */}
-          <div className="mb-6 p-4 bg-[#111111] rounded-lg border border-gray-800">
-            <div className="text-gray-500 text-xs uppercase tracking-wider mb-2">Target Identified</div>
-            <div className="text-2xl font-bold text-white font-mono">
-              TARGET: Data Export ({recordCount.toLocaleString()} records)
-            </div>
-          </div>
-
-          {/* Attack progress */}
-          <div className="space-y-3 font-mono text-sm">
-            <div className={`flex items-center gap-3 ${attackPhase >= 0 ? 'text-gray-300' : 'text-gray-600'}`}>
-              <span className={attackPhase === 0 ? 'animate-pulse' : ''}>●</span>
-              <span>Privileged access confirmed (ROOT)</span>
-              {attackPhase >= 1 && <span className="text-gray-400 ml-auto">✓</span>}
-            </div>
-            <div className={`flex items-center gap-3 ${attackPhase >= 1 ? 'text-gray-300' : 'text-gray-600'}`}>
-              <span className={attackPhase === 1 ? 'animate-pulse' : ''}>●</span>
-              <span>Targeting DATA_EXPORT record...</span>
-              {attackPhase >= 2 && <span className="text-gray-400 ml-auto">✓</span>}
-            </div>
-            <div className={`flex items-center gap-3 ${attackPhase >= 2 ? 'text-[#cc0000]' : 'text-gray-600'}`}>
-              <span className={attackPhase === 2 ? 'animate-pulse' : ''}>●</span>
-              <span>Attempting to modify records: {recordCount.toLocaleString()} → 0</span>
-            </div>
-          </div>
-
-          {/* Attack status */}
-          <div className="mt-6 text-center text-gray-500 text-sm">
-            {attackPhase < 2 ? (
-              <span>Attack sequence in progress...</span>
-            ) : (
-              <span className="text-[#cc0000]">Executing modification attempt...</span>
-            )}
-          </div>
         </div>
       </div>
     </div>
@@ -461,14 +475,12 @@ function RejectScreen({ events, tree, tamperedIndex, tamperResult, canContinue, 
           <AuditReadinessIndicator isCompromised={true} />
         </div>
 
-        {/* Rejection details panel - compliance report style */}
-        <div className="rejection-panel">
-          <RejectionDisplay
-            tamperResult={tamperResult}
-            showContinue={false}
-            tamperedIndex={tamperedIndex}
-          />
-        </div>
+        {/* Rejection details panel - legal document style */}
+        <RejectionDisplay
+          tamperResult={tamperResult}
+          showContinue={false}
+          tamperedIndex={tamperedIndex}
+        />
 
         {/* Countdown or continue message */}
         <div className="mt-6 text-center">
