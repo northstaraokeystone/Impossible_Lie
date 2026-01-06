@@ -68,6 +68,7 @@ export default function BackupProof() {
         <div className="flex items-center gap-2">
           <span className="text-xs text-[#F8FAFC] font-medium tracking-wide">BACKUP</span>
           {isAlert && <div className="w-1.5 h-1.5 rounded-full bg-[#ef4444]" />}
+          <span className="text-[9px] text-[#64748b] ml-1">Verify first, not hope</span>
         </div>
       </div>
 

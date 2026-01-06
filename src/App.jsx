@@ -17,6 +17,7 @@ import BackupProof from './components/BackupProof'
 import DecisionLog from './components/DecisionLog'
 import ChainCore from './components/ChainCore'
 import IncidentModal from './components/IncidentModal'
+import TrustGapComparison from './components/TrustGapComparison'
 
 export default function App() {
   const demo = useSaaSGuard()
@@ -39,6 +40,8 @@ export default function App() {
     } else if (e.key === 'Escape') {
       if (demo.phase === PHASES.MODAL) {
         demo.closeModal()
+      } else if (demo.phase === PHASES.TRUST_GAP) {
+        demo.closeTrustGap()
       }
     }
   }, [demo.phase])
@@ -122,6 +125,11 @@ export default function App() {
       {demo.phase === PHASES.MODAL && (
         <IncidentModal onClose={demo.closeModal} />
       )}
+
+      {/* Trust Gap comparison overlay */}
+      {demo.phase === PHASES.TRUST_GAP && (
+        <TrustGapComparison onClose={demo.closeTrustGap} />
+      )}
     </div>
   )
 }
@@ -143,7 +151,8 @@ function PhaseIndicator({ phase }) {
     [PHASES.BACKUP_HELD]: 'HELD',
     [PHASES.AI_TRIAGE]: 'TRIAGE',
     [PHASES.FREEZE]: 'DONE',
-    [PHASES.MODAL]: 'REPORT'
+    [PHASES.MODAL]: 'REPORT',
+    [PHASES.TRUST_GAP]: 'COMPARE'
   }
 
   const label = phaseLabels[phase] || '...'
@@ -165,11 +174,11 @@ function ArmedIndicator() {
   )
 }
 
-// Intro screen - Armed state with visible structure
+// Intro screen - Competitive Hook with Armed state
 function IntroScreen({ onStart }) {
-  // Auto-start after 8 seconds
+  // Auto-start after 4 seconds
   useEffect(() => {
-    const timer = setTimeout(onStart, 8000)
+    const timer = setTimeout(onStart, 4000)
     return () => clearTimeout(timer)
   }, [onStart])
 
@@ -259,60 +268,39 @@ function IntroScreen({ onStart }) {
         </div>
       </div>
 
-      {/* Centered intro overlay */}
+      {/* Centered intro overlay - Competitive Hook */}
       <div
         className="absolute inset-0 flex items-center justify-center cursor-pointer z-10"
         onClick={onStart}
       >
-        <div className="text-center max-w-4xl bg-[#09090b]/95 p-12 rounded">
-          {/* Alert badge - dim red */}
-          <div className="inline-block px-4 py-2 mb-8">
-            <span className="text-[#ef4444]/60 text-xs tracking-widest">
-              THREAT INTELLIGENCE
-            </span>
-          </div>
-
-          {/* Main title - brighter */}
-          <h1 className="text-4xl md:text-5xl font-medium mb-6 text-[#E2E8F0]">
-            Midnight Blizzard
+        <div className="text-center max-w-3xl bg-[#09090b]/95 p-12 rounded border border-[#1f1f23]">
+          {/* Attack name - Bold, Slate-50 */}
+          <h1 className="text-sm font-bold mb-6 text-[#F8FAFC] tracking-wide">
+            JANUARY 2024: MIDNIGHT BLIZZARD ATTACK
           </h1>
 
-          {/* Subtitle */}
-          <p className="text-sm text-[#94a3b8] mb-4">
-            APT29 | Nation-State | January 2024
+          {/* Competitive framing - dim, factual */}
+          <p className="text-xs text-[#94a3b8] mb-4 leading-relaxed">
+            Standard tools (<span className="text-[#94a3b8]">Spin.AI</span>, <span className="text-[#94a3b8]">Obsidian</span>) would only see this attack{' '}
+            <span className="text-[#94a3b8]">after the data left</span>.
           </p>
 
-          {/* Description */}
-          <p className="text-sm text-[#94a3b8] mb-12 max-w-xl mx-auto leading-relaxed">
-            What if Cloudflare had SaaSGuard during the Midnight Blizzard attack?
+          {/* SaaSGuard differentiation - medium weight, brighter */}
+          <p className="text-xs text-[#E2E8F0] font-medium mb-10 leading-relaxed max-w-xl mx-auto">
+            Watch how SaaSGuard's <span className="text-[#E2E8F0]">cryptographic sidecar</span> rejects the corruption
+            in real-time and generates the <span className="text-[#F8FAFC] font-medium">proof required for the lawsuit</span>.
           </p>
 
-          {/* Attack vector info - brighter */}
-          <div className="flex justify-center gap-12 mb-12">
-            <div className="text-center">
-              <div className="text-lg text-[#E2E8F0] mb-1">OKTA</div>
-              <div className="text-[10px] text-[#94a3b8]">Source</div>
-            </div>
-            <div className="text-center">
-              <div className="text-lg text-[#E2E8F0] mb-1">OAuth</div>
-              <div className="text-[10px] text-[#94a3b8]">Vector</div>
-            </div>
-            <div className="text-center">
-              <div className="text-lg text-[#E2E8F0] mb-1">APT29</div>
-              <div className="text-[10px] text-[#94a3b8]">Actor</div>
-            </div>
-          </div>
-
-          {/* CTA - stealth button, brighter text */}
+          {/* CTA - stealth button */}
           <button
             onClick={onStart}
-            className="px-6 py-3 bg-[#111111] text-[#E2E8F0] text-sm rounded hover:bg-[#1f1f23]"
+            className="px-8 py-3 bg-[#111111] text-[#E2E8F0] text-sm rounded hover:bg-[#1f1f23] border border-[#27272a]"
           >
-            LAUNCH
+            BEGIN SCENARIO
           </button>
 
-          <p className="mt-6 text-[#94a3b8] text-xs">
-            Press Space to begin
+          <p className="mt-6 text-[#64748b] text-[10px]">
+            Auto-starts in 4 seconds
           </p>
         </div>
       </div>

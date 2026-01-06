@@ -92,8 +92,11 @@ export default function IncidentModal({ onClose }) {
               {/* Status */}
               <div className="mt-6 text-center">
                 <span className="text-xs text-[#71717a] tracking-wide">
-                  STATUS: ADMISSIBLE
+                  STATUS: ADMISSIBLE IN COURT
                 </span>
+                <div className="text-[9px] text-[#a1a1aa] mt-1">
+                  (Standard backup tools produce screenshots, not cryptographic proof)
+                </div>
               </div>
             </div>
           </div>

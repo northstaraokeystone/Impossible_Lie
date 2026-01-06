@@ -81,6 +81,7 @@ export default function TokenTracker() {
         <div className="flex items-center gap-2">
           <span className="text-xs text-[#F8FAFC] font-medium tracking-wide">TOKEN</span>
           {isAlert && <div className="w-1.5 h-1.5 rounded-full bg-[#ef4444]" />}
+          <span className="text-[9px] text-[#64748b] ml-1">Captures root admin actions</span>
         </div>
       </div>
 
