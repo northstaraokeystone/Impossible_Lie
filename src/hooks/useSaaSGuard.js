@@ -22,7 +22,8 @@ export const PHASES = {
   BACKUP_HELD: 'BACKUP_HELD',
   AI_TRIAGE: 'AI_TRIAGE',
   FREEZE: 'FREEZE',
-  MODAL: 'MODAL'
+  MODAL: 'MODAL',
+  TRUST_GAP: 'TRUST_GAP'            // Competitive comparison screen
 }
 
 // Active panel for sequential highlighting
@@ -499,8 +500,13 @@ const useSaaSGuardStore = create((set, get) => ({
     get().init()
   },
 
-  // Close modal and restart
+  // Close modal and show Trust Gap comparison
   closeModal: () => {
+    set({ phase: PHASES.TRUST_GAP })
+  },
+
+  // Close Trust Gap and restart
+  closeTrustGap: () => {
     get().init()
   }
 }))

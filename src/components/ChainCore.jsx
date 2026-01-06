@@ -104,7 +104,10 @@ export default function ChainCore() {
     <div className="h-full flex flex-col bg-[#111111] overflow-hidden">
       {/* Header - Just "LEDGER", brighter for visibility */}
       <div className="px-6 py-4 flex items-center justify-between">
-        <span className="text-xs text-[#F8FAFC] font-medium tracking-widest">LEDGER</span>
+        <div>
+          <span className="text-xs text-[#F8FAFC] font-medium tracking-widest">LEDGER</span>
+          <span className="text-[9px] text-[#64748b] ml-3">Unlike text logs, immutable</span>
+        </div>
 
         {/* Chain root - full display */}
         <div className="flex items-center gap-2">
