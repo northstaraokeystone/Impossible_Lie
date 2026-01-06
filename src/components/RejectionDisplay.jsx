@@ -1,6 +1,6 @@
 /**
- * RejectionDisplay - Forensic preservation display
- * Legal-grade language, not technical explanations
+ * RejectionDisplay - Legal document style evidence display
+ * Paper aesthetic with VERIFIED stamp - court-ready artifact
  */
 
 import React from 'react'
@@ -11,116 +11,136 @@ export default function RejectionDisplay({ tamperResult, showContinue = true, ta
   }
 
   const blockNumber = tamperedIndex + 1
+  const timestamp = new Date().toISOString()
+  const incidentId = Date.now().toString(36).toUpperCase()
 
   return (
-    <div className="bg-[#0a0a0a] border border-[#cc0000] rounded-lg p-8" style={{ boxShadow: '0 0 20px rgba(204, 0, 0, 0.2)' }}>
-      {/* Header - Forensic Preservation Style */}
-      <div className="border-b border-gray-800 pb-4 mb-6">
-        <div className="flex items-center justify-between">
-          <div>
-            <div className="text-xs text-gray-500 font-mono uppercase tracking-widest mb-1">[ FORENSIC PRESERVATION ]</div>
-            <h2 className="text-2xl font-bold text-white mb-1">EVIDENCE PRESERVED</h2>
-            <p className="text-gray-400 font-mono text-sm">AUDIT LOCK ENGAGED</p>
-          </div>
-          <div className="text-right">
-            <div className="text-xs text-gray-500 font-mono">INCIDENT ID</div>
-            <div className="text-gray-300 font-mono">{Date.now().toString(36).toUpperCase()}</div>
-          </div>
-        </div>
-      </div>
-
-      {/* Forensic Evidence Details - Legal Language */}
-      <div className="space-y-4 font-mono text-sm">
-        {/* Attacker Context */}
-        <div className="p-4 bg-[#111111] rounded-lg border-l-2 border-[#cc9900]">
-          <div className="text-[#cc9900] text-xs uppercase tracking-wider mb-2">Privileged Access Abuse Detected</div>
-          <div className="text-gray-300">
-            ROOT user attempted unauthorized record modification with full administrative credentials
-          </div>
-        </div>
-
-        {/* Detail Line 1: Original State */}
-        <div className="p-4 bg-[#111111] rounded-lg">
-          <div className="flex items-start gap-4">
-            <div className="text-[#00aa66] font-bold text-lg">01</div>
-            <div>
-              <div className="text-gray-500 text-xs uppercase tracking-wider mb-1">Original State</div>
-              <div className="text-white">LOCKED <span className="text-[#00aa66]">●</span></div>
-            </div>
-          </div>
-        </div>
-
-        {/* Detail Line 2: Attempted Modification */}
-        <div className="p-4 bg-[#111111] rounded-lg">
-          <div className="flex items-start gap-4">
-            <div className="text-[#cc0000] font-bold text-lg">02</div>
-            <div>
-              <div className="text-gray-500 text-xs uppercase tracking-wider mb-1">Attempted Modification</div>
-              <div className="text-white">REJECTED <span className="text-[#cc0000]">●</span></div>
-            </div>
-          </div>
-        </div>
-
-        {/* Detail Line 3: Incident Logged */}
-        <div className="p-4 bg-[#111111] rounded-lg">
-          <div className="flex items-start gap-4">
-            <div className="text-gray-400 font-bold text-lg">03</div>
-            <div>
-              <div className="text-gray-500 text-xs uppercase tracking-wider mb-1">Incident Status</div>
-              <div className="text-gray-300">Timestamped to Immutable Ledger</div>
-            </div>
-          </div>
-        </div>
-
-        {/* Detail Line 4: Chain of Custody */}
-        <div className="p-4 bg-[#111111] rounded-lg">
-          <div className="flex items-start gap-4">
-            <div className="text-[#00aa66] font-bold text-lg">04</div>
-            <div>
-              <div className="text-gray-500 text-xs uppercase tracking-wider mb-1">Chain of Custody</div>
-              <div className="text-white">INTACT <span className="text-[#00aa66]">●</span></div>
-            </div>
-          </div>
-        </div>
-
-        {/* Forensic Summary */}
-        <div className="p-4 bg-[#111111] rounded-lg border border-gray-800">
-          <div className="text-gray-500 text-xs uppercase tracking-wider mb-2">Forensic Summary</div>
-          <div className="text-gray-300">
-            Tampering attempt at Record #{blockNumber.toString().padStart(4, '0')} preserved for legal proceedings.
-            Original evidence remains unaltered and court-admissible.
-          </div>
-        </div>
-      </div>
-
-      {/* Download Incident Report Button - Clearly visible white outline */}
-      <div className="mt-6 pt-4 border-t border-gray-800">
-        <button
-          className="w-full bg-transparent border border-white text-white font-bold py-4 px-6
-                     rounded-lg transition-colors duration-200 text-lg hover:bg-white/10
-                     flex items-center justify-center gap-3"
-          onClick={(e) => {
-            e.stopPropagation()
-            // Non-functional for demo - shows intent
-            alert('Incident report generation would be triggered here.')
+    <div className="flex justify-center">
+      {/* Paper Document Container - Legal document aesthetic */}
+      <div
+        className="relative bg-[#fafafa] rounded-sm max-w-lg w-full"
+        style={{
+          boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3), 0 0 1px rgba(0, 0, 0, 0.2)',
+          aspectRatio: '8.5 / 11',
+          minHeight: '600px',
+        }}
+      >
+        {/* Subtle paper texture overlay */}
+        <div
+          className="absolute inset-0 opacity-30 pointer-events-none"
+          style={{
+            backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%' height='100%' filter='url(%23noise)'/%3E%3C/svg%3E")`,
           }}
+        />
+
+        {/* VERIFIED Stamp Watermark */}
+        <div
+          className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 pointer-events-none select-none"
+          style={{ transform: 'translate(-50%, -50%) rotate(-15deg)' }}
         >
-          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-          </svg>
-          DOWNLOAD AUDIT REPORT (.PDF)
-        </button>
+          <div
+            className="border-4 border-[#2d5a3d] rounded-lg px-8 py-3 opacity-20"
+            style={{ borderStyle: 'double' }}
+          >
+            <span
+              className="text-[#2d5a3d] text-5xl font-bold tracking-widest"
+              style={{ fontFamily: 'Georgia, serif' }}
+            >
+              VERIFIED
+            </span>
+          </div>
+        </div>
+
+        {/* Document Content */}
+        <div className="relative z-10 p-8 h-full flex flex-col">
+          {/* Document Header - Serif, centered, legal feel */}
+          <div className="text-center border-b-2 border-gray-300 pb-6 mb-6">
+            <h1
+              className="text-2xl text-gray-900 mb-2 tracking-wide"
+              style={{ fontFamily: 'Georgia, Times, serif' }}
+            >
+              IMMUTABLE LEDGER RECORD
+            </h1>
+            <p
+              className="text-gray-600 text-sm"
+              style={{ fontFamily: 'Georgia, Times, serif' }}
+            >
+              Chain of Custody Report
+            </p>
+          </div>
+
+          {/* Document Body - Clean, formal */}
+          <div className="flex-1 space-y-5 text-gray-800 text-sm">
+            {/* Incident Reference */}
+            <div className="flex justify-between border-b border-gray-200 pb-3">
+              <span className="text-gray-500">Incident Reference</span>
+              <span className="font-mono text-gray-900">{incidentId}</span>
+            </div>
+
+            {/* Timestamp */}
+            <div className="flex justify-between border-b border-gray-200 pb-3">
+              <span className="text-gray-500">Timestamp (UTC)</span>
+              <span className="font-mono text-gray-900 text-xs">{timestamp}</span>
+            </div>
+
+            {/* Record ID */}
+            <div className="flex justify-between border-b border-gray-200 pb-3">
+              <span className="text-gray-500">Record ID</span>
+              <span className="font-mono text-gray-900">#{blockNumber.toString().padStart(4, '0')}</span>
+            </div>
+
+            {/* Original State */}
+            <div className="flex justify-between border-b border-gray-200 pb-3">
+              <span className="text-gray-500">Original State</span>
+              <span className="text-gray-900 font-medium">Preserved - Unaltered</span>
+            </div>
+
+            {/* Modification Attempt */}
+            <div className="flex justify-between border-b border-gray-200 pb-3">
+              <span className="text-gray-500">Modification Attempt</span>
+              <span className="text-red-700 font-medium">Rejected</span>
+            </div>
+
+            {/* Chain Integrity */}
+            <div className="flex justify-between border-b border-gray-200 pb-3">
+              <span className="text-gray-500">Chain Integrity</span>
+              <span className="text-green-700 font-medium">Intact</span>
+            </div>
+
+            {/* Legal Notice */}
+            <div
+              className="mt-4 p-4 bg-gray-100 rounded text-xs text-gray-600 leading-relaxed"
+              style={{ fontFamily: 'Georgia, Times, serif' }}
+            >
+              This document certifies that the referenced record has been cryptographically
+              secured and any tampering attempt has been logged to an immutable ledger.
+              The original evidence remains court-admissible under applicable data integrity standards.
+            </div>
+          </div>
+
+          {/* Download Button - INSIDE the document */}
+          <div className="mt-auto pt-6">
+            <button
+              className="w-full bg-gray-900 text-white py-3 px-6 rounded
+                         transition-colors duration-200 text-sm font-medium
+                         hover:bg-gray-800 flex items-center justify-center gap-2"
+              onClick={(e) => {
+                e.stopPropagation()
+                alert('Incident report generation would be triggered here.')
+              }}
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
+              DOWNLOAD PDF
+            </button>
+          </div>
+        </div>
       </div>
 
-      {/* Footer - Compliance Notice */}
-      <div className="mt-4 flex items-center justify-between text-xs text-gray-500">
-        <span>This record is generated automatically and stored immutably.</span>
-        <span className="font-mono">EVIDENCE_PRESERVED</span>
-      </div>
-
-      {/* Continue message - conditionally shown */}
+      {/* Continue message - outside document, conditionally shown */}
       {showContinue && (
-        <div className="mt-6 text-center text-gray-400 text-sm">
+        <div className="absolute bottom-4 left-0 right-0 text-center text-gray-400 text-sm">
           Click or press Space to continue
         </div>
       )}
