@@ -9,14 +9,18 @@
 }
 
 /* STEALTH PALETTE - "If it works, invisible. If it breaks, RED screams." */
+/* OFF-WHITE FIX: Readable on projectors with bad contrast */
 :root {
   --bg-container: #09090b;  /* Zinc-950, near black */
   --bg-panel: #111111;      /* Panel background */
-  --text-primary: #94a3b8;  /* Slate-400, dim */
-  --text-secondary: #475569; /* Slate-600, very dim */
-  --text-data: #cbd5e1;     /* Slate-300, for numbers */
+  --bg-modal: #0f0f0f;      /* Slightly lighter for "paper" effect */
+  --text-header: #F8FAFC;   /* Slate-50, bright off-white for headers */
+  --text-primary: #E2E8F0;  /* Slate-200, readable body text */
+  --text-secondary: #94a3b8; /* Slate-400, labels/secondary */
+  --text-data: #E2E8F0;     /* Slate-200, data values */
+  --text-dim: #64748b;      /* Slate-500, armed state/inactive */
   --alert-red: #ef4444;     /* Red-500 - ONLY color allowed */
-  --stealth-dim: #475569;   /* For success states - invisible */
+  --stealth-dim: #64748b;   /* For armed/inactive states */
 }
 
 html, body, #root {
@@ -145,8 +149,8 @@ html, body, #root {
 .receipt-table th {
   text-align: left;
   padding: 0.75rem;
-  color: var(--text-secondary);
-  font-weight: 400;
+  color: var(--text-header);
+  font-weight: 500;
 }
 
 .receipt-table td {
@@ -171,4 +175,53 @@ html, body, #root {
   height: 8px;
   border-radius: 50%;
   background-color: var(--alert-red);
+}
+
+/* Armed state indicator */
+.armed-indicator {
+  position: fixed;
+  top: 12px;
+  right: 16px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  z-index: 100;
+}
+
+.armed-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: var(--stealth-dim);
+}
+
+.armed-text {
+  font-size: 10px;
+  color: var(--text-dim);
+  letter-spacing: 0.05em;
+}
+
+/* Armed state panel headers - visible at 30% from T=0 */
+.panel-armed {
+  opacity: 0.3;
+}
+
+/* Affidavit serif typography */
+.font-serif-legal {
+  font-family: 'Merriweather', Georgia, 'Times New Roman', serif;
+}
+
+/* Affidavit paper effect */
+.modal-paper {
+  box-shadow: 0 0 40px rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.03);
+}
+
+/* Section dividers for affidavit */
+.divider-double {
+  border-top: 2px double #333333;
+}
+
+.divider-single {
+  border-top: 1px solid #333333;
 }
