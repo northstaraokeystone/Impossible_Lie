@@ -176,12 +176,7 @@ function ArmedIndicator() {
 
 // Intro screen - Competitive Hook with Armed state
 function IntroScreen({ onStart }) {
-  // Auto-start after 4 seconds
-  useEffect(() => {
-    const timer = setTimeout(onStart, 4000)
-    return () => clearTimeout(timer)
-  }, [onStart])
-
+  // NO auto-start - presenter controls timing
   return (
     <div className="h-screen flex flex-col bg-[#09090b] overflow-hidden no-select">
       {/* Armed indicator - always visible */}
@@ -279,8 +274,8 @@ function IntroScreen({ onStart }) {
             JANUARY 2024: MIDNIGHT BLIZZARD ATTACK
           </h1>
 
-          {/* Competitive framing - dim, factual */}
-          <p className="text-xs text-[#94a3b8] mb-4 leading-relaxed">
+          {/* Competitive framing - KEY DIFFERENTIATOR, larger for visibility */}
+          <p className="text-sm text-[#94a3b8] mb-4 leading-relaxed">
             Standard tools (<span className="text-[#94a3b8]">Spin.AI</span>, <span className="text-[#94a3b8]">Obsidian</span>) would only see this attack{' '}
             <span className="text-[#94a3b8]">after the data left</span>.
           </p>
@@ -298,10 +293,6 @@ function IntroScreen({ onStart }) {
           >
             BEGIN SCENARIO
           </button>
-
-          <p className="mt-6 text-[#64748b] text-[10px]">
-            Auto-starts in 4 seconds
-          </p>
         </div>
       </div>
     </div>

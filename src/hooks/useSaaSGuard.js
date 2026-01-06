@@ -237,6 +237,9 @@ const useSaaSGuardStore = create((set, get) => ({
     // Phase 2: TokenTracker lights up ALONE (5-10s)
     await get().runAttackDetection()
 
+    // THE BREATH: 1500ms pause - Let them read "St. Petersburg"
+    await new Promise(r => setTimeout(r, 1500))
+
     // THE PAUSE (10-12s) - 2 seconds of nothing, tension builds
     set({ phase: PHASES.THE_PAUSE, activePanel: ACTIVE_PANEL.NONE })
     await new Promise(r => setTimeout(r, 2000))
@@ -244,14 +247,20 @@ const useSaaSGuardStore = create((set, get) => ({
     // Phase 3: BackupProof lights up ALONE (12-16s)
     await get().runPivotAttempt()
 
+    // VICTORY PAUSE: 2000ms - The attack is dead. Let them stare at the corpse.
+    // This is THE PRODUCT MOMENT. Backup panel RED, AI panel EMPTY.
+    await new Promise(r => setTimeout(r, 2000))
+
     // Phase 4: DecisionLog summarizes (16-22s)
     await get().runAiTriage()
 
     // Finalize block and show modal
     get().finalizeBlock()
 
-    // Phase 5: Document generation (22-30s)
-    await new Promise(r => setTimeout(r, 2000))
+    // THE BREATH: 1000ms pause - System "generating" PDF
+    await new Promise(r => setTimeout(r, 1000))
+
+    // Phase 5: Document generation
     set({ phase: PHASES.FREEZE, activePanel: ACTIVE_PANEL.NONE })
 
     await new Promise(r => setTimeout(r, 1000))

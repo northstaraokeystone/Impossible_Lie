@@ -225,3 +225,29 @@ html, body, #root {
 .divider-single {
   border-top: 1px solid #333333;
 }
+
+/* SYSTEM ARMED PULSE - Screen feels alive during pauses */
+@keyframes armed-pulse {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 1.0; }
+}
+
+.armed-indicator {
+  animation: armed-pulse 3s ease-in-out infinite;
+}
+
+/* AFFIDAVIT SLIDE-UP - Paper physics, feels like document being handed across desk */
+@keyframes affidavit-slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.affidavit-enter {
+  animation: affidavit-slide-up 0.4s ease-out forwards;
+}

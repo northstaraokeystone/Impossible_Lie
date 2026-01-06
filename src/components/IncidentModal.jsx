@@ -32,8 +32,8 @@ export default function IncidentModal({ onClose }) {
         onClick={onClose}
       />
 
-      {/* Modal - paper effect with subtle white glow */}
-      <div className="relative bg-[#0f0f0f] rounded max-w-2xl w-full mx-4 overflow-hidden modal-paper">
+      {/* Modal - paper effect with subtle white glow, SLIDE UP animation */}
+      <div className="relative bg-[#0f0f0f] rounded max-w-2xl w-full mx-4 overflow-hidden modal-paper affidavit-enter">
         {/* Document Preview */}
         <div className="p-8">
           <div className="bg-[#fafafa] rounded p-8 text-[#09090b]">
@@ -80,6 +80,7 @@ export default function IncidentModal({ onClose }) {
                   <div>• Backup write attempt rejected</div>
                   <div>• Account suspended</div>
                   <div>• Token rotation initiated</div>
+                  <div>• Regulatory Trigger: NULL (Breach Prevented)</div>
                 </div>
               </div>
 
