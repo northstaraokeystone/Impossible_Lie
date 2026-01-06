@@ -135,13 +135,13 @@ export default function TrustGapComparison({ onClose }) {
           </p>
         </div>
 
-        {/* Footer */}
+        {/* Footer - RESTART SCENARIO button (wider, clear CTA for looped demo) */}
         <div className="px-8 py-4 flex items-center justify-center bg-[#111111]">
           <button
             onClick={onClose}
-            className="px-6 py-2 bg-[#1f1f23] text-[#E2E8F0] text-xs rounded hover:bg-[#27272a] border border-[#27272a]"
+            className="px-8 py-2 min-w-[160px] bg-[#1f1f23] text-[#E2E8F0] text-xs rounded hover:bg-[#27272a] border border-[#27272a]"
           >
-            CLOSE
+            RESTART SCENARIO
           </button>
         </div>
 
