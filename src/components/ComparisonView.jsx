@@ -18,34 +18,33 @@ export default function ComparisonView({ events = [] }) {
   const originalValue = exportEvent?.details?.records || 4942
   const tamperedValue = 0
 
-  // Animation sequence
+  // Animation sequence - INSTANT fraud on left, DELIBERATE detection on right
   useEffect(() => {
     const timers = []
 
-    // Left panel sequence (standard logging)
-    // Phase 1: Show modification attempt (2s)
-    timers.push(setTimeout(() => setLeftPhase(1), 2000))
-    // Phase 2: Show value changing (2s later)
-    timers.push(setTimeout(() => setLeftPhase(2), 4000))
-    // Phase 3: Show UPDATE SUCCESSFUL (2s later)
+    // LEFT PANEL: THE HORROR - Fraud happens INSTANTLY (< 0.5 seconds)
+    // No "modifying..." phase - skip straight to changed value
+    // Phase 2: Value already changed (100ms - barely perceptible)
+    timers.push(setTimeout(() => setLeftPhase(2), 100))
+    // Phase 3: Show UPDATE SUCCESSFUL (300ms total - disturbingly fast)
     timers.push(setTimeout(() => {
       setLeftPhase(3)
       setSilenceHold(true)
-    }, 6000))
+    }, 300))
 
-    // THE SILENCE - hold for 3 seconds before right panel responds
-    timers.push(setTimeout(() => setSilenceHold(false), 9000))
+    // THE UNCOMFORTABLE SILENCE - 2.5 seconds of green "success" with no alert
+    timers.push(setTimeout(() => setSilenceHold(false), 2800))
 
-    // Right panel sequence (receipts-native)
-    // Phase 1: Show attempt starting (after silence)
-    timers.push(setTimeout(() => setRightPhase(1), 9500))
-    // Phase 2: Flash red (instant detection)
-    timers.push(setTimeout(() => setRightPhase(2), 10500))
-    // Phase 3: Show INTEGRITY VIOLATION
-    timers.push(setTimeout(() => setRightPhase(3), 11500))
+    // RIGHT PANEL: DELIBERATE DEFENSE - Shows the system actually checking
+    // Phase 1: Show "Processing..." (after silence ends)
+    timers.push(setTimeout(() => setRightPhase(1), 2900))
+    // Phase 2: Flash red "DETECTING..." (1 second of analysis)
+    timers.push(setTimeout(() => setRightPhase(2), 3900))
+    // Phase 3: Show INTEGRITY VIOLATION (1.5 seconds to detect)
+    timers.push(setTimeout(() => setRightPhase(3), 5400))
 
-    // Show tagline after both panels complete
-    timers.push(setTimeout(() => setShowTagline(true), 14000))
+    // Show tagline after violation holds for 3+ seconds
+    timers.push(setTimeout(() => setShowTagline(true), 8500))
 
     return () => timers.forEach(clearTimeout)
   }, [])
@@ -104,7 +103,7 @@ export default function ComparisonView({ events = [] }) {
           {leftPhase >= 3 && (
             <div className="mt-4 text-center">
               <span className="text-red-400/60 text-xs font-mono tracking-wider">
-                THE LIE BECAME THE TRUTH
+                THE LIE BECOMES THE TRUTH
               </span>
             </div>
           )}
@@ -150,7 +149,7 @@ export default function ComparisonView({ events = [] }) {
           }`}>
             {rightPhase < 2 ? (
               <span className="text-gray-500">
-                {rightPhase === 0 ? 'Awaiting operation...' : 'Processing...'}
+                {rightPhase === 0 ? 'Awaiting operation...' : 'Analyzing cryptographic signatures...'}
               </span>
             ) : rightPhase === 2 ? (
               <div className="text-red-500 font-bold text-xl animate-pulse">
@@ -168,7 +167,7 @@ export default function ComparisonView({ events = [] }) {
           {rightPhase >= 3 && (
             <div className="mt-4 text-center">
               <span className="text-green-400/80 text-xs font-mono tracking-wider">
-                TRUTH PRESERVED
+                THE TRUTH IS PRESERVED
               </span>
             </div>
           )}

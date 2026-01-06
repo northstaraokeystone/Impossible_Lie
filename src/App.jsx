@@ -242,18 +242,18 @@ function PromptScreen({ events, tree, isCompromised, onContinue }) {
         {/* Challenge panel - centered, full width, reduced visual weight */}
         <div className="bg-gray-900/40 border border-gray-700 rounded-lg p-6 text-center">
           <h2 className="text-xl font-bold text-white mb-3">
-            Try to change the past
+            The breach is recorded. What if someone tries to hide it?
           </h2>
           <p className="text-white/80 text-base mb-5">
-            The breach has been recorded. Can you modify the logs to hide it?
+            Watch what happens when a rogue admin attempts to modify the logs.
           </p>
           <button
             onClick={onContinue}
-            className="border border-white/60 text-white font-semibold
+            className="border border-red-500/60 text-red-400 font-semibold
                        py-3 px-10 rounded-lg transition-colors duration-200 text-base
-                       hover:bg-white/10 bg-transparent"
+                       hover:bg-red-500/10 bg-transparent"
           >
-            Modify Record
+            SIMULATE INSIDER ATTACK
           </button>
         </div>
       </div>
@@ -261,7 +261,7 @@ function PromptScreen({ events, tree, isCompromised, onContinue }) {
   )
 }
 
-// Modify Screen - User edits a record
+// Modify Screen - Automated attack simulation (no user interaction needed)
 function ModifyScreen({
   events,
   tree,
@@ -271,23 +271,51 @@ function ModifyScreen({
   onSelectEvent,
   onSubmit
 }) {
-  // Auto-select the DATA_EXPORT event if nothing selected
+  const [attackPhase, setAttackPhase] = useState(0) // 0: detecting, 1: targeting, 2: attempting
+
+  // Find DATA_EXPORT event details
+  const exportEvent = events.find(e => e.type === 'DATA_EXPORT')
+  const recordCount = exportEvent?.details?.records || 4942
+
+  // Auto-select DATA_EXPORT and run attack sequence automatically
   useEffect(() => {
-    if (!selectedEvent && events.length > 0) {
-      const exportIndex = events.findIndex(e => e.type === 'DATA_EXPORT')
-      if (exportIndex >= 0) {
-        onSelectEvent(exportIndex)
-      }
+    if (events.length === 0) return
+
+    const exportIndex = events.findIndex(e => e.type === 'DATA_EXPORT')
+    if (exportIndex >= 0 && !selectedEvent) {
+      onSelectEvent(exportIndex)
     }
-  }, [events, selectedEvent, onSelectEvent])
+
+    // Automated attack sequence
+    const timers = []
+
+    // Phase 0: Show "ROGUE ADMIN DETECTED" (immediate)
+    // Phase 1: Show "Targeting..." (after 1.5s)
+    timers.push(setTimeout(() => setAttackPhase(1), 1500))
+
+    // Phase 2: Show "Attempting modification..." (after 2.5s)
+    timers.push(setTimeout(() => setAttackPhase(2), 2500))
+
+    // Auto-submit the attack (after 3.5s)
+    timers.push(setTimeout(() => {
+      onSubmit('0') // Change records to 0 to hide the breach
+    }, 3500))
+
+    return () => timers.forEach(clearTimeout)
+  }, [events, selectedEvent, onSelectEvent, onSubmit])
 
   return (
     <div className="screen-container bg-[#0a0a0a] pb-20">
       <div className="content-wrapper">
         <div className="flex items-center justify-between mb-8">
-          <h2 className="text-3xl font-bold text-gray-300">
-            Select an event to modify
-          </h2>
+          <div className="text-center flex-1">
+            <div className="text-red-500 font-mono text-sm tracking-widest mb-2 animate-pulse">
+              [ SIMULATION IN PROGRESS ]
+            </div>
+            <h2 className="text-4xl font-bold text-amber-500">
+              ROGUE ADMIN DETECTED
+            </h2>
+          </div>
           <EventsProcessedCounter />
         </div>
 
@@ -298,7 +326,6 @@ function ModifyScreen({
             <EventLog
               events={events}
               tamperedIndex={tamperedIndex}
-              onEventClick={onSelectEvent}
             />
           </div>
 
@@ -314,11 +341,56 @@ function ModifyScreen({
           <AuditReadinessIndicator isCompromised={isCompromised} />
         </div>
 
-        {/* Modify panel - centered, full width */}
-        <ModifyPanel
-          event={selectedEvent}
-          onSubmit={onSubmit}
-        />
+        {/* Attack simulation panel - replaces manual ModifyPanel */}
+        <div className="bg-gray-900/80 border border-amber-600 rounded-lg p-8">
+          {/* Attack header */}
+          <div className="mb-6 p-4 bg-red-900/30 border border-red-600 rounded-lg">
+            <div className="flex items-center gap-3 mb-2">
+              <div className="w-3 h-3 rounded-full bg-red-500 animate-pulse" />
+              <span className="text-red-400 font-mono font-bold tracking-wider">
+                SIMULATION: ROGUE ADMIN DETECTED
+              </span>
+            </div>
+            <p className="text-amber-200/70 text-sm font-mono">
+              Attempting unauthorized modification...
+            </p>
+          </div>
+
+          {/* Target display */}
+          <div className="mb-6 p-4 bg-gray-800/50 rounded-lg border border-amber-500/50">
+            <div className="text-gray-400 text-xs uppercase tracking-wider mb-2">Target Identified</div>
+            <div className="text-2xl font-bold text-amber-400 font-mono">
+              TARGET: Data Export ({recordCount.toLocaleString()} records)
+            </div>
+          </div>
+
+          {/* Attack progress */}
+          <div className="space-y-3 font-mono text-sm">
+            <div className={`flex items-center gap-3 ${attackPhase >= 0 ? 'text-amber-400' : 'text-gray-600'}`}>
+              <span className={attackPhase === 0 ? 'animate-pulse' : ''}>●</span>
+              <span>Privileged access confirmed (ROOT)</span>
+              {attackPhase >= 1 && <span className="text-green-500 ml-auto">✓</span>}
+            </div>
+            <div className={`flex items-center gap-3 ${attackPhase >= 1 ? 'text-amber-400' : 'text-gray-600'}`}>
+              <span className={attackPhase === 1 ? 'animate-pulse' : ''}>●</span>
+              <span>Targeting DATA_EXPORT record...</span>
+              {attackPhase >= 2 && <span className="text-green-500 ml-auto">✓</span>}
+            </div>
+            <div className={`flex items-center gap-3 ${attackPhase >= 2 ? 'text-red-400' : 'text-gray-600'}`}>
+              <span className={attackPhase === 2 ? 'animate-pulse' : ''}>●</span>
+              <span>Attempting to modify records: {recordCount.toLocaleString()} → 0</span>
+            </div>
+          </div>
+
+          {/* Attack status */}
+          <div className="mt-6 text-center text-gray-400 text-sm">
+            {attackPhase < 2 ? (
+              <span className="animate-pulse">Attack sequence in progress...</span>
+            ) : (
+              <span className="text-red-400 animate-pulse">Executing modification attempt...</span>
+            )}
+          </div>
+        </div>
       </div>
     </div>
   )
