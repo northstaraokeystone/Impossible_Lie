@@ -1,6 +1,14 @@
 /**
- * IncidentModal - Final incident report with suite summary
- * Shows attack detection, module contributions, and liability avoided
+ * IncidentModal - Affidavit Document as Hero
+ * Enterprise War Room styling - "Boring enough to trust, scary enough to buy"
+ *
+ * KEY CHANGES:
+ * - Document preview as modal centerpiece (not stats grid)
+ * - Affidavit that looks like a legal filing
+ * - "CHAIN OF CUSTODY: UNBROKEN" prominent
+ * - "ADMISSIBLE IN COURT" status
+ * - "DOWNLOAD AFFIDAVIT" button
+ * - Liability breakdown as FOOTNOTE with line-items and source citation
  */
 
 import React from 'react'
@@ -12,151 +20,157 @@ export default function IncidentModal({ onClose }) {
     integrity,
     aiActions,
     receipts,
-    chainRoot
+    chainRoot,
+    blockCount
   } = useSaaSGuard()
+
+  const currentDate = new Date().toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  })
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
       {/* Backdrop */}
       <div
-        className="absolute inset-0 bg-black/80 backdrop-blur-sm"
+        className="absolute inset-0 bg-[#1a1a1a]/90 backdrop-blur-sm"
         onClick={onClose}
       />
 
       {/* Modal */}
-      <div className="relative bg-[#0a0a0a] border border-gray-700 rounded-xl max-w-3xl w-full mx-4 overflow-hidden shadow-2xl">
-        {/* Header */}
-        <div className="px-8 py-6 border-b border-gray-800">
-          <h2 className="text-xl font-bold text-white tracking-wide mb-2">
-            SAASGUARD INCIDENT REPORT
-          </h2>
-          <div className="h-0.5 w-full bg-gradient-to-r from-[#00d4ff] via-[#ffaa00] to-[#00aa66]" />
-        </div>
-
-        {/* Attack Info */}
-        <div className="px-8 py-4 border-b border-gray-800 bg-[#0d0d0d]">
-          <div className="grid grid-cols-2 gap-4 text-sm">
-            <div>
-              <span className="text-gray-500">ATTACK DETECTED:</span>
-              <span className="ml-2 text-[#cc3333] font-bold">MIDNIGHT BLIZZARD (APT29)</span>
+      <div className="relative bg-[#1e1e1e] rounded-lg max-w-2xl w-full mx-4 overflow-hidden shadow-2xl document-animate">
+        {/* Document Preview - THE HERO */}
+        <div className="p-8">
+          <div className="bg-[#faf9f7] rounded-lg p-8 text-[#1a1a1a] shadow-inner">
+            {/* Document header */}
+            <div className="text-center border-b-2 border-[#1a1a1a] pb-4 mb-6">
+              <h2 className="text-lg font-bold tracking-wide mb-1">
+                AFFIDAVIT OF SYSTEM INTEGRITY
+              </h2>
+              <div className="w-32 h-0.5 bg-[#1a1a1a] mx-auto mt-2" />
             </div>
-            <div>
-              <span className="text-gray-500">ATTACK VECTOR:</span>
-              <span className="ml-2 text-white">STOLEN OAUTH TOKENS (OKTA BREACH)</span>
-            </div>
-          </div>
-        </div>
 
-        {/* Three Module Summary */}
-        <div className="px-8 py-6">
-          <div className="grid grid-cols-3 gap-4">
-            {/* TokenTracker */}
-            <div className="bg-[#0d0d0d] border border-[#00d4ff]/30 rounded-lg p-4">
-              <h4 className="text-[#00d4ff] font-bold text-sm mb-3">TOKENTRACKER</h4>
-              <div className="space-y-2 text-xs">
-                <div className="flex justify-between">
-                  <span className="text-gray-500">ANOMALIES:</span>
-                  <span className="text-white font-mono">{Math.max(anomalies, 7)}</span>
+            {/* Document body */}
+            <div className="space-y-4 text-sm">
+              <div className="flex justify-between">
+                <span className="text-[#718096]">DATE:</span>
+                <span className="font-medium">{currentDate}</span>
+              </div>
+
+              <div className="flex justify-between">
+                <span className="text-[#718096]">INCIDENT:</span>
+                <span className="font-medium">APT29 Token Reuse Attack</span>
+              </div>
+
+              <div className="my-6 py-4 border-y border-[#e2e8f0]">
+                <div className="flex justify-between items-center mb-3">
+                  <span className="text-[#718096]">CHAIN OF CUSTODY:</span>
+                  <span className="font-bold text-[#2f855a]">UNBROKEN</span>
                 </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-500">BLOCKED:</span>
-                  <span className="text-white font-mono">{Math.max(anomalies, 7)}</span>
+                <div className="flex justify-between items-center mb-3">
+                  <span className="text-[#718096]">DATA LOSS:</span>
+                  <span className="font-bold">0 RECORDS</span>
                 </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-500">STATUS:</span>
-                  <span className="text-green-400">✓</span>
+                <div className="flex justify-between items-center">
+                  <span className="text-[#718096]">ATTACKER IDENTIFIED:</span>
+                  <span className="font-medium">APT29 (Midnight Blizzard)</span>
                 </div>
               </div>
-            </div>
 
-            {/* BackupProof */}
-            <div className="bg-[#0d0d0d] border border-[#ffaa00]/30 rounded-lg p-4">
-              <h4 className="text-[#ffaa00] font-bold text-sm mb-3">BACKUPPROOF</h4>
-              <div className="space-y-2 text-xs">
-                <div className="flex justify-between">
-                  <span className="text-gray-500">INTEGRITY:</span>
-                  <span className="text-white font-mono">{integrity}%</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-500">ATTEMPTS:</span>
-                  <span className="text-white font-mono">1</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-500">STATUS:</span>
-                  <span className="text-green-400">✓</span>
+              {/* Actions taken */}
+              <div>
+                <p className="text-[#718096] mb-2 text-xs font-medium">ACTIONS TAKEN:</p>
+                <div className="space-y-1.5 text-sm">
+                  <div className="flex items-center gap-2">
+                    <span className="text-[#2f855a]">OK</span>
+                    <span>Unauthorized token blocked</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-[#2f855a]">OK</span>
+                    <span>Backup write attempt rejected</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-[#2f855a]">OK</span>
+                    <span>Account suspended</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-[#2f855a]">OK</span>
+                    <span>Token rotation initiated</span>
+                  </div>
                 </div>
               </div>
-            </div>
 
-            {/* DecisionLog */}
-            <div className="bg-[#0d0d0d] border border-[#00aa66]/30 rounded-lg p-4">
-              <h4 className="text-[#00aa66] font-bold text-sm mb-3">DECISIONLOG</h4>
-              <div className="space-y-2 text-xs">
-                <div className="flex justify-between">
-                  <span className="text-gray-500">AI ACTIONS:</span>
-                  <span className="text-white font-mono">{aiActions}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-500">COMPLIANCE:</span>
-                  <span className="text-green-400">✓</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-500">STATUS:</span>
-                  <span className="text-green-400">✓</span>
+              {/* Cryptographic root */}
+              <div className="mt-6 pt-4 border-t border-[#e2e8f0]">
+                <p className="text-[#718096] text-xs mb-1">CRYPTOGRAPHIC ROOT:</p>
+                <p className="font-hash text-xs text-[#1a1a1a]">{chainRoot}</p>
+              </div>
+
+              {/* Status badge */}
+              <div className="mt-6 text-center">
+                <div className="inline-block px-4 py-2 bg-[#2f855a]/10 rounded">
+                  <span className="text-[#2f855a] font-bold text-sm">
+                    STATUS: ADMISSIBLE IN COURT
+                  </span>
                 </div>
               </div>
             </div>
           </div>
         </div>
 
-        {/* Liability Avoided */}
-        <div className="px-8 py-6 bg-[#0d0d0d] border-t border-b border-gray-800">
-          <div className="text-center">
-            <p className="text-gray-500 text-sm mb-2">LIABILITY AVOIDED</p>
-            <p className="text-4xl font-bold text-green-400 font-mono">$4,200,000</p>
-            <p className="text-gray-600 text-xs mt-1">(Based on avg breach cost + regulatory fines)</p>
-          </div>
-        </div>
+        {/* Liability Avoided - FOOTNOTE (not hero) with line-item breakdown */}
+        <div className="px-8 py-6 bg-[#1a1a1a]">
+          <p className="text-[#718096] text-xs mb-3 font-medium">ESTIMATED LIABILITY AVOIDED</p>
 
-        {/* Compliance Badges */}
-        <div className="px-8 py-4 border-b border-gray-800">
-          <p className="text-gray-500 text-xs mb-3">COMPLIANCE SATISFIED:</p>
-          <div className="flex flex-wrap gap-3">
-            {['SOC 2 Type II', 'GDPR Art. 32', 'EU AI Act', 'NIST CSF'].map(badge => (
-              <div key={badge} className="flex items-center gap-1.5 text-xs">
-                <span className="text-green-400">✓</span>
-                <span className="text-gray-300">{badge}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Chain Core Footer */}
-        <div className="px-8 py-4 bg-[#0d0d0d]">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-gray-500 text-xs">POWERED BY: <span className="text-white font-bold">UNBREAKABLE CHAIN CORE</span></p>
-              <p className="text-gray-600 text-xs mt-1">
-                RECEIPTS ANCHORED: <span className="text-gray-400 font-mono">{receipts.length}</span>
-              </p>
-              <p className="text-gray-600 text-xs">
-                CRYPTOGRAPHIC ROOT: <span className="text-gray-400 font-mono">{chainRoot} (ANCHORED)</span>
-              </p>
+          {/* Line-item breakdown */}
+          <div className="space-y-1.5 text-sm mb-4">
+            <div className="flex justify-between text-[#e2e8f0]">
+              <span>GDPR Article 32 Fine (Data breach):</span>
+              <span className="font-medium">$2,000,000</span>
             </div>
-
-            {/* Export Button */}
-            <button
-              onClick={onClose}
-              className="px-6 py-3 bg-white text-black font-semibold rounded-lg hover:bg-gray-100 transition-colors"
-            >
-              EXPORT FORENSIC PACKET
-            </button>
+            <div className="flex justify-between text-[#e2e8f0]">
+              <span>Ransomware Recovery Cost (Backups):</span>
+              <span className="font-medium">$1,800,000</span>
+            </div>
+            <div className="flex justify-between text-[#e2e8f0]">
+              <span>Incident Response & Forensics:</span>
+              <span className="font-medium">$300,000</span>
+            </div>
+            <div className="flex justify-between text-[#e2e8f0]">
+              <span>Reputational Damage (est.):</span>
+              <span className="font-medium">$100,000</span>
+            </div>
+            <div className="flex justify-between text-[#e2e8f0] pt-2 border-t border-[#333]">
+              <span className="font-semibold">TOTAL AVOIDED:</span>
+              <span className="font-semibold text-[#2f855a]">$4,200,000</span>
+            </div>
           </div>
+
+          {/* Source citation */}
+          <p className="text-[10px] text-[#718096]">
+            Source: IBM Cost of Data Breach Report 2024
+          </p>
+        </div>
+
+        {/* Download button */}
+        <div className="px-8 py-6 flex items-center justify-between">
+          <div className="text-[10px] text-[#718096]">
+            <p>POWERED BY: <span className="text-[#e2e8f0] font-medium">UNBREAKABLE CHAIN CORE</span></p>
+            <p className="mt-0.5">BLOCKS: {blockCount} | RECEIPTS: {receipts.length}</p>
+          </div>
+
+          <button
+            onClick={onClose}
+            className="px-6 py-3 bg-[#e2e8f0] text-[#1a1a1a] font-semibold rounded-lg hover:bg-white transition-colors"
+          >
+            DOWNLOAD AFFIDAVIT
+          </button>
         </div>
 
         {/* Restart hint */}
-        <div className="px-8 py-2 text-center border-t border-gray-800">
-          <p className="text-gray-600 text-xs">Press R to restart demo</p>
+        <div className="px-8 py-2 text-center bg-[#1a1a1a]">
+          <p className="text-[#718096] text-xs">Press R to restart demo</p>
         </div>
       </div>
     </div>
