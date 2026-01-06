@@ -76,23 +76,23 @@ export default function TokenTracker() {
 
   return (
     <div className="h-full flex flex-col bg-[#111111] overflow-hidden">
-      {/* Header - minimal, red dot for alert only */}
+      {/* Header - off-white for visibility, red dot for alert */}
       <div className="px-5 py-4">
         <div className="flex items-center gap-2">
-          <span className="text-xs text-[#475569] tracking-wide">TOKEN</span>
+          <span className="text-xs text-[#F8FAFC] font-medium tracking-wide">TOKEN</span>
           {isAlert && <div className="w-1.5 h-1.5 rounded-full bg-[#ef4444]" />}
         </div>
       </div>
 
-      {/* Stats - stealth grey, anomalies RED if > 0 */}
+      {/* Stats - off-white for readability, anomalies RED if > 0 */}
       <div className="px-5 py-4 bg-[#09090b] grid grid-cols-2 gap-6">
         <div>
-          <span className="text-[10px] text-[#475569] block mb-1">SESSIONS</span>
-          <span className="text-sm text-[#94a3b8]">{activeSessions.toLocaleString()}</span>
+          <span className="text-[10px] text-[#94a3b8] block mb-1">SESSIONS</span>
+          <span className="text-sm text-[#E2E8F0]">{activeSessions.toLocaleString()}</span>
         </div>
         <div>
-          <span className="text-[10px] text-[#475569] block mb-1">ANOMALIES</span>
-          <span className={`text-sm ${anomalies > 0 ? 'text-[#ef4444]' : 'text-[#475569]'}`}>
+          <span className="text-[10px] text-[#94a3b8] block mb-1">ANOMALIES</span>
+          <span className={`text-sm ${anomalies > 0 ? 'text-[#ef4444]' : 'text-[#64748b]'}`}>
             {anomalies}
           </span>
         </div>
@@ -102,7 +102,7 @@ export default function TokenTracker() {
       <div className="flex-1 flex flex-col min-h-0 px-5 py-4">
         <div className="flex-1 overflow-y-auto space-y-1 text-[10px]">
           {tokenEvents.length === 0 ? (
-            <span className="text-[#475569]">Idle</span>
+            <span className="text-[#64748b]">Idle</span>
           ) : (
             tokenEvents.map((event, i) => {
               const isBlocked = event.status === 'blocked'
@@ -115,14 +115,14 @@ export default function TokenTracker() {
                     isBlocked ? 'bg-[#ef4444]/5' : 'bg-transparent'
                   }`}
                 >
-                  <span className="text-[#475569] w-12 font-hash">{event.time}</span>
-                  <span className={`flex-1 truncate mx-2 ${
-                    isBlocked ? 'text-[#ef4444]' : 'text-[#94a3b8]'
+                  <span className="text-[#94a3b8] w-12 font-hash">{event.time}</span>
+                  <span className={`flex-1 truncate mx-2 font-medium ${
+                    isBlocked ? 'text-[#ef4444]' : 'text-[#E2E8F0]'
                   }`}>
                     {event.identity}
                   </span>
                   <span className={`w-20 text-right ${
-                    event.origin === 'ST. PETERSBURG' ? 'text-[#ef4444]' : 'text-[#475569]'
+                    event.origin === 'ST. PETERSBURG' ? 'text-[#ef4444]' : 'text-[#94a3b8]'
                   }`}>
                     {event.origin}
                   </span>
@@ -136,11 +136,11 @@ export default function TokenTracker() {
           )}
         </div>
 
-        {/* Alert info - RED only, no badge styling */}
+        {/* Alert info - RED only, medium weight for readability */}
         {showAlertBadge && (
-          <div className="mt-3 py-2 text-[10px] text-[#ef4444]">
+          <div className="mt-3 py-2 text-[10px] text-[#ef4444] font-medium">
             <div>APT29 TOKEN REUSE</div>
-            <div className="text-[#ef4444]/60">svc_okta_sync blocked • ST. PETERSBURG</div>
+            <div className="text-[#ef4444]/70">svc_okta_sync blocked • ST. PETERSBURG</div>
           </div>
         )}
       </div>
