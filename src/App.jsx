@@ -1,8 +1,13 @@
 /**
- * SaaSGuard Security Operations Center
- * Enterprise War Room - "Boring enough to trust, scary enough to buy"
+ * SaaSGuard - Stealth Bomber Aesthetic
+ * "If it works, invisible. If it breaks, RED screams."
  *
- * De-gamified from "Cyberpunk Casino" to "Swiss Boardroom"
+ * CHANGES:
+ * - Background: #09090b (Zinc-950, near black)
+ * - NO header gradient
+ * - NO colored phase indicators (all grey)
+ * - Panels in single container (no individual boxes)
+ * - Screen nearly OFF by default
  */
 
 import React, { useEffect, useCallback } from 'react'
@@ -48,28 +53,28 @@ export default function App() {
     return <IntroScreen onStart={demo.start} />
   }
 
-  // Get panel opacity classes based on active panel
+  // Get panel opacity - minimal changes, no animations
   const getPanelClass = (panelType) => {
     const { activePanel, phase } = demo
 
-    // During modal/freeze, dim everything
+    // During modal/freeze, dim
     if (phase === PHASES.MODAL || phase === PHASES.FREEZE) {
-      return 'opacity-40 transition-opacity duration-500'
+      return 'opacity-30'
     }
 
-    // During the pause, all panels at 80%
+    // During the pause
     if (phase === PHASES.THE_PAUSE) {
-      return 'opacity-80 transition-opacity duration-500'
+      return 'opacity-60'
     }
 
     // All panels active during normal ops
     if (activePanel === ACTIVE_PANEL.ALL) {
-      return 'opacity-100 transition-opacity duration-500'
+      return 'opacity-100'
     }
 
-    // Dim inactive panels, highlight active one
+    // Dim inactive panels
     if (activePanel === ACTIVE_PANEL.NONE) {
-      return 'opacity-80 transition-opacity duration-500'
+      return 'opacity-60'
     }
 
     const isActive = (
@@ -78,35 +83,23 @@ export default function App() {
       (panelType === 'decision' && activePanel === ACTIVE_PANEL.DECISION_LOG)
     )
 
-    return isActive
-      ? 'opacity-100 transition-opacity duration-500'
-      : 'opacity-60 transition-opacity duration-500'
+    return isActive ? 'opacity-100' : 'opacity-40'
   }
 
-  // Main SOC layout - Enterprise styling
+  // Main SOC layout - Stealth
   return (
-    <div className="h-screen flex flex-col bg-[#1a1a1a] overflow-hidden no-select">
-      {/* Header - Enterprise clean */}
-      <header className="px-6 py-4 bg-[#1e1e1e]">
+    <div className="h-screen flex flex-col bg-[#09090b] overflow-hidden no-select">
+      {/* Header - Minimal */}
+      <header className="px-6 py-3 bg-[#111111]">
         <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-base font-semibold text-[#e2e8f0] tracking-wide">
-              SAASGUARD SECURITY OPERATIONS CENTER
-            </h1>
-            <div className="h-0.5 w-64 mt-2 bg-gradient-to-r from-[#3182ce] via-[#d69e2e] to-[#2f855a]" />
-          </div>
-          <div className="flex items-center gap-4">
-            <PhaseIndicator phase={demo.phase} />
-            <div className="text-xs text-[#718096]">
-              INCIDENT: MIDNIGHT BLIZZARD
-            </div>
-          </div>
+          <span className="text-xs text-[#475569] tracking-widest">SAASGUARD</span>
+          <PhaseIndicator phase={demo.phase} />
         </div>
       </header>
 
-      {/* Main content area - whitespace gaps instead of borders */}
-      <div className="flex-1 flex flex-col min-h-0 p-3 gap-3 bg-[#1a1a1a]">
-        {/* Three module columns */}
+      {/* Main content - whitespace separation only */}
+      <div className="flex-1 flex flex-col min-h-0 p-3 gap-3 bg-[#09090b]">
+        {/* Three panels in single container */}
         <div className="flex-[3] grid grid-cols-3 gap-3 min-h-0">
           <div className={getPanelClass('token')}>
             <TokenTracker />
@@ -133,30 +126,36 @@ export default function App() {
   )
 }
 
-// Phase indicator component - Enterprise styling
+// Phase indicator - all grey except ALERT states = red
 function PhaseIndicator({ phase }) {
+  const isAlert = [
+    PHASES.ATTACK_DETECTED,
+    PHASES.TOKEN_BLOCKED,
+    PHASES.PIVOT_ATTEMPT
+  ].includes(phase)
+
   const phaseLabels = {
-    [PHASES.NORMAL_OPS]: { label: 'NORMAL OPS', color: 'text-[#2f855a]' },
-    [PHASES.ATTACK_DETECTED]: { label: 'ATTACK DETECTED', color: 'text-[#d69e2e]' },
-    [PHASES.TOKEN_BLOCKED]: { label: 'TOKEN BLOCKED', color: 'text-[#c53030]' },
-    [PHASES.THE_PAUSE]: { label: 'ANALYZING', color: 'text-[#718096]' },
-    [PHASES.PIVOT_ATTEMPT]: { label: 'PIVOT ATTEMPT', color: 'text-[#c53030]' },
-    [PHASES.BACKUP_HELD]: { label: 'BACKUP SECURED', color: 'text-[#2f855a]' },
-    [PHASES.AI_TRIAGE]: { label: 'AI TRIAGE', color: 'text-[#2f855a]' },
-    [PHASES.FREEZE]: { label: 'ANALYSIS COMPLETE', color: 'text-[#e2e8f0]' },
-    [PHASES.MODAL]: { label: 'REPORT READY', color: 'text-[#e2e8f0]' }
+    [PHASES.NORMAL_OPS]: 'NORMAL',
+    [PHASES.ATTACK_DETECTED]: 'ALERT',
+    [PHASES.TOKEN_BLOCKED]: 'BLOCKED',
+    [PHASES.THE_PAUSE]: '...',
+    [PHASES.PIVOT_ATTEMPT]: 'PIVOT',
+    [PHASES.BACKUP_HELD]: 'HELD',
+    [PHASES.AI_TRIAGE]: 'TRIAGE',
+    [PHASES.FREEZE]: 'DONE',
+    [PHASES.MODAL]: 'REPORT'
   }
 
-  const current = phaseLabels[phase] || { label: 'INITIALIZING', color: 'text-[#718096]' }
+  const label = phaseLabels[phase] || '...'
 
   return (
-    <div className={`px-3 py-1.5 rounded bg-[#1a1a1a] text-xs font-medium ${current.color}`}>
-      {current.label}
-    </div>
+    <span className={`text-[10px] ${isAlert ? 'text-[#ef4444]' : 'text-[#475569]'}`}>
+      {label}
+    </span>
   )
 }
 
-// Intro screen component - Enterprise de-gamified
+// Intro screen - Stealth
 function IntroScreen({ onStart }) {
   // Auto-start after 8 seconds
   useEffect(() => {
@@ -165,79 +164,65 @@ function IntroScreen({ onStart }) {
   }, [onStart])
 
   return (
-    <div className="intro-container cursor-pointer bg-[#1a1a1a]" onClick={onStart}>
+    <div className="intro-container cursor-pointer bg-[#09090b]" onClick={onStart}>
       <div className="text-center max-w-4xl">
-        {/* Alert badge - muted enterprise red */}
-        <div className="inline-block px-4 py-2 mb-8 bg-[#c53030]/10 rounded">
-          <span className="text-[#c53030] text-sm tracking-widest font-medium">
-            THREAT INTELLIGENCE ALERT
+        {/* Alert badge - dim red */}
+        <div className="inline-block px-4 py-2 mb-8">
+          <span className="text-[#ef4444]/60 text-xs tracking-widest">
+            THREAT INTELLIGENCE
           </span>
         </div>
 
-        {/* Main title - clean sans-serif */}
-        <h1 className="text-5xl md:text-6xl font-bold mb-6 text-[#e2e8f0]">
+        {/* Main title */}
+        <h1 className="text-4xl md:text-5xl font-medium mb-6 text-[#94a3b8]">
           Midnight Blizzard
         </h1>
 
         {/* Subtitle */}
-        <p className="text-lg text-[#718096] mb-4">
-          APT29 | Nation-State Actor | January 2024
+        <p className="text-sm text-[#475569] mb-4">
+          APT29 | Nation-State | January 2024
         </p>
 
         {/* Description */}
-        <p className="text-base text-[#718096] mb-12 max-w-2xl mx-auto leading-relaxed">
+        <p className="text-sm text-[#475569] mb-12 max-w-xl mx-auto leading-relaxed">
           What if Cloudflare had SaaSGuard during the Midnight Blizzard attack?
-          Watch how the full suite would have detected, blocked, and documented
-          the intrusion with cryptographic proof.
         </p>
 
-        {/* Attack vector info - enterprise colors */}
+        {/* Attack vector info - all grey */}
         <div className="flex justify-center gap-12 mb-12">
           <div className="text-center">
-            <div className="text-xl font-semibold text-[#c53030] mb-1">OKTA</div>
-            <div className="text-xs text-[#718096]">Breach Source</div>
+            <div className="text-lg text-[#94a3b8] mb-1">OKTA</div>
+            <div className="text-[10px] text-[#475569]">Source</div>
           </div>
           <div className="text-center">
-            <div className="text-xl font-semibold text-[#d69e2e] mb-1">OAuth</div>
-            <div className="text-xs text-[#718096]">Attack Vector</div>
+            <div className="text-lg text-[#94a3b8] mb-1">OAuth</div>
+            <div className="text-[10px] text-[#475569]">Vector</div>
           </div>
           <div className="text-center">
-            <div className="text-xl font-semibold text-[#3182ce] mb-1">APT29</div>
-            <div className="text-xs text-[#718096]">Threat Actor</div>
+            <div className="text-lg text-[#94a3b8] mb-1">APT29</div>
+            <div className="text-[10px] text-[#475569]">Actor</div>
           </div>
         </div>
 
-        {/* CTA - clean enterprise button */}
+        {/* CTA - stealth button */}
         <button
           onClick={onStart}
-          className="px-8 py-4 bg-[#e2e8f0] text-[#1a1a1a] font-semibold rounded-lg hover:bg-white transition-colors"
+          className="px-6 py-3 bg-[#111111] text-[#94a3b8] text-sm rounded hover:bg-[#1f1f23]"
         >
-          LAUNCH SCENARIO
+          LAUNCH
         </button>
 
-        <p className="mt-6 text-[#718096] text-sm">
-          Click or press Space to begin
+        <p className="mt-6 text-[#475569] text-xs">
+          Press Space to begin
         </p>
 
-        {/* Suite preview - enterprise colors */}
-        <div className="mt-16 flex justify-center gap-6">
-          <ModulePreview name="TokenTracker" color="#3182ce" />
-          <ModulePreview name="BackupProof" color="#d69e2e" />
-          <ModulePreview name="DecisionLog" color="#2f855a" />
+        {/* Module preview - very dim */}
+        <div className="mt-16 flex justify-center gap-4">
+          <span className="text-[10px] text-[#475569]">TOKEN</span>
+          <span className="text-[10px] text-[#475569]">BACKUP</span>
+          <span className="text-[10px] text-[#475569]">AI</span>
         </div>
       </div>
-    </div>
-  )
-}
-
-// Module preview badge for intro screen
-function ModulePreview({ name, color }) {
-  return (
-    <div
-      className="px-4 py-2 rounded bg-[#1e1e1e] opacity-70"
-      style={{ color: color }}
-    >
-      <span className="text-xs font-medium">{name}</span>
     </div>
   )
 }

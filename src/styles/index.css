@@ -8,16 +8,15 @@
   box-sizing: border-box;
 }
 
-/* Enterprise color palette - "Boring enough to trust, scary enough to buy" */
+/* STEALTH PALETTE - "If it works, invisible. If it breaks, RED screams." */
 :root {
-  --bg-container: #1a1a1a;
-  --bg-panel: #1e1e1e;
-  --text-primary: #e2e8f0;
-  --text-secondary: #718096;
-  --enterprise-blue: #3182ce;
-  --enterprise-gold: #d69e2e;
-  --enterprise-green: #2f855a;
-  --enterprise-red: #c53030;
+  --bg-container: #09090b;  /* Zinc-950, near black */
+  --bg-panel: #111111;      /* Panel background */
+  --text-primary: #94a3b8;  /* Slate-400, dim */
+  --text-secondary: #475569; /* Slate-600, very dim */
+  --text-data: #cbd5e1;     /* Slate-300, for numbers */
+  --alert-red: #ef4444;     /* Red-500 - ONLY color allowed */
+  --stealth-dim: #475569;   /* For success states - invisible */
 }
 
 html, body, #root {
@@ -35,7 +34,7 @@ html, body, #root {
   font-size: 10px;
 }
 
-/* Main container for SOC layout - use whitespace instead of borders */
+/* Main container for SOC layout - whitespace separation only */
 .soc-container {
   height: 100vh;
   display: grid;
@@ -50,7 +49,6 @@ html, body, #root {
   background-color: var(--bg-panel);
   padding: 1rem 2rem;
   text-align: center;
-  border-radius: 8px;
 }
 
 /* Module grid - three columns with whitespace gaps */
@@ -64,13 +62,12 @@ html, body, #root {
 /* Chain core spans full width */
 .chain-core {
   background-color: var(--bg-panel);
-  border-radius: 8px;
 }
 
-/* Custom scrollbar - subtle enterprise style */
+/* Custom scrollbar - stealth style */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 4px;
+  height: 4px;
 }
 
 ::-webkit-scrollbar-track {
@@ -78,12 +75,12 @@ html, body, #root {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #4a5568;
-  border-radius: 3px;
+  background: #27272a;
+  border-radius: 2px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #5a6778;
+  background: #3f3f46;
 }
 
 /* Intro screen container */
@@ -97,86 +94,40 @@ html, body, #root {
   background-color: var(--bg-container);
 }
 
-/* Subtle pulse animations - enterprise style (no neon glow) */
-@keyframes pulse-subtle {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.7; }
-}
+/* NO ANIMATIONS - Static until change, instant update */
+/* All keyframes removed - stealth mode */
 
-.pulse-subtle {
-  animation: pulse-subtle 2s ease-in-out infinite;
-}
-
-/* Panel active state - subtle glow instead of neon */
+/* Panel states - no glow, subtle opacity only */
 .panel-active {
-  box-shadow: 0 0 20px rgba(49, 130, 206, 0.15);
+  /* No glow - stealth */
 }
 
 .panel-dimmed {
-  opacity: 0.6;
-  transition: opacity 0.5s ease;
+  opacity: 0.5;
 }
 
 .panel-normal {
   opacity: 1;
-  transition: opacity 0.5s ease;
 }
 
-/* Remove scanline effect - too "gamey" */
-
-/* Subtle glow effects - enterprise muted */
-.glow-blue {
-  box-shadow: 0 0 12px rgba(49, 130, 206, 0.2);
-}
-
-.glow-gold {
-  box-shadow: 0 0 12px rgba(214, 158, 46, 0.2);
-}
-
-.glow-green {
-  box-shadow: 0 0 12px rgba(47, 133, 90, 0.2);
-}
-
+/* NO glow effects - stealth mode */
 .glow-red {
-  box-shadow: 0 0 12px rgba(197, 48, 48, 0.2);
+  /* Alert state only - subtle */
+  box-shadow: 0 0 8px rgba(239, 68, 68, 0.15);
 }
 
-/* Badge animations - more subtle */
-@keyframes badge-pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.8; }
+/* Status indicators - ALERT ONLY gets color */
+.status-alert {
+  background-color: rgba(239, 68, 68, 0.1);
+  color: var(--alert-red);
 }
 
-.badge-pulse {
-  animation: badge-pulse 2s ease-in-out infinite;
-}
-
-/* Receipt entry animation */
-@keyframes slide-in {
-  from {
-    opacity: 0;
-    transform: translateX(-10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
-.receipt-entry {
-  animation: slide-in 0.3s ease-out;
-}
-
-/* Fade transitions */
-.fade-enter {
-  opacity: 0;
-  transform: translateY(10px);
-}
-
-.fade-enter-active {
-  opacity: 1;
-  transform: translateY(0);
-  transition: opacity 0.5s ease, transform 0.5s ease;
+/* Everything else is invisible grey */
+.status-monitoring,
+.status-verified,
+.status-recording {
+  background-color: transparent;
+  color: var(--text-secondary);
 }
 
 /* Modal backdrop blur */
@@ -184,70 +135,7 @@ html, body, #root {
   backdrop-filter: blur(8px);
 }
 
-/* Header gradient bar - enterprise palette */
-.header-gradient {
-  height: 2px;
-  background: linear-gradient(
-    to right,
-    var(--enterprise-blue),
-    var(--enterprise-gold),
-    var(--enterprise-green)
-  );
-}
-
-/* Module status indicators - enterprise colors */
-.status-monitoring {
-  background-color: rgba(49, 130, 206, 0.1);
-  color: var(--enterprise-blue);
-}
-
-.status-alert {
-  background-color: rgba(197, 48, 48, 0.15);
-  color: var(--enterprise-red);
-}
-
-.status-verified {
-  background-color: rgba(214, 158, 46, 0.1);
-  color: var(--enterprise-gold);
-}
-
-.status-recording {
-  background-color: rgba(47, 133, 90, 0.15);
-  color: var(--enterprise-green);
-}
-
-/* Counter animations */
-@keyframes count-up {
-  from { opacity: 0.5; transform: scale(1.05); }
-  to { opacity: 1; transform: scale(1); }
-}
-
-.count-animate {
-  animation: count-up 0.2s ease-out;
-}
-
-/* Loading dots */
-@keyframes loading-dot {
-  0%, 20% { opacity: 0; }
-  50% { opacity: 1; }
-  100% { opacity: 0; }
-}
-
-.loading-dots span:nth-child(1) { animation: loading-dot 1.5s infinite 0s; }
-.loading-dots span:nth-child(2) { animation: loading-dot 1.5s infinite 0.2s; }
-.loading-dots span:nth-child(3) { animation: loading-dot 1.5s infinite 0.4s; }
-
-/* Map dot ping effect */
-@keyframes ping {
-  75%, 100% {
-    transform: scale(2);
-    opacity: 0;
-  }
-}
-
-.animate-ping {
-  animation: ping 1s cubic-bezier(0, 0, 0.2, 1) infinite;
-}
+/* NO header gradient - stealth */
 
 /* Table styling - use whitespace, no borders */
 .receipt-table {
@@ -258,7 +146,7 @@ html, body, #root {
   text-align: left;
   padding: 0.75rem;
   color: var(--text-secondary);
-  font-weight: 500;
+  font-weight: 400;
 }
 
 .receipt-table td {
@@ -270,35 +158,17 @@ html, body, #root {
   user-select: none;
 }
 
-/* Document generation animation */
-@keyframes document-appear {
-  0% {
-    opacity: 0;
-    transform: scale(0.95) translateY(20px);
-  }
-  100% {
-    opacity: 1;
-    transform: scale(1) translateY(0);
-  }
+/* Red dot indicator - THE ONLY alert visual */
+.alert-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: var(--alert-red);
 }
 
-.document-animate {
-  animation: document-appear 0.5s ease-out;
-}
-
-/* Typewriter effect for document */
-@keyframes typewriter {
-  from { width: 0; }
-  to { width: 100%; }
-}
-
-/* Block linkage animation */
-@keyframes block-link {
-  0% { opacity: 0; stroke-dashoffset: 100; }
-  100% { opacity: 1; stroke-dashoffset: 0; }
-}
-
-.block-link {
-  stroke-dasharray: 100;
-  animation: block-link 0.5s ease-out forwards;
+.alert-dot-large {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: var(--alert-red);
 }
